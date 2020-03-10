@@ -127,7 +127,18 @@ public class LoginActivity extends AppCompatActivity {
                                     String lastname = object.getString("lastname");
                                     String role = object.getString("role");
 
-                                    //
+                                    //check user role
+                                    if (role.equals("admin")){
+                                        //taking user to admin panel
+                                        Intent intent = new Intent(LoginActivity.this, AdminHomeActivity.class);
+                                        intent.putExtra("user_id",user_id);
+                                        intent.putExtra("email",email);
+                                        intent.putExtra("phone",phone);
+                                        intent.putExtra("firstname",firstname);
+                                        intent.putExtra("lastname",lastname);
+                                        startActivity(intent);
+                                        finish();
+                                    }
 
 
                                 }
