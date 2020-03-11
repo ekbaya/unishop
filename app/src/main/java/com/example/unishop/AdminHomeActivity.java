@@ -24,6 +24,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 public class AdminHomeActivity extends AppCompatActivity {
+    //views
+    private  TextView headerTv;
+
+    private Intent intent;
 
     private AppBarConfiguration mAppBarConfiguration;
 
@@ -52,6 +56,17 @@ public class AdminHomeActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+
+        View headerView = navigationView.getHeaderView(0);
+        headerTv = (TextView) headerView.findViewById(R.id.headerTv);
+
+
+        intent = getIntent();
+        String firstname = intent.getStringExtra("firstname");
+        String lastname = intent.getStringExtra("lastname");
+        headerTv.setText(firstname+" "+lastname);
+
+
     }
 
     @Override

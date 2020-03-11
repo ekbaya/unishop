@@ -15,15 +15,14 @@
         android:id="@+id/headerTv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Welcome Elias"
+        android:text="Welcome"
         android:textSize="22sp"
         android:textColor="@color/colorWhite"
         android:textStyle="bold"/>
     <TextView
-        android:id="@+id/roleTv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Your are logged in as admin"
+        android:text="Your are logged in as Admin"
         android:textSize="18sp"
         android:textColor="@color/colorWhite"
         android:textStyle="bold"/>

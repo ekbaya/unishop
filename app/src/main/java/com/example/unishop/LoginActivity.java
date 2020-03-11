@@ -7,6 +7,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -38,7 +39,8 @@ public class LoginActivity extends AppCompatActivity {
     private ProgressDialog loading;
 
     //login url
-    private static String LOGIN_URL = "http://histogenetic-exhaus.000webhostapp.com/unishop/authenticate.php";
+    //private static String LOGIN_URL = "http://histogenetic-exhaus.000webhostapp.com/unishop/authenticate.php";
+    private static String LOGIN_URL = "http://110.110.11.96/unishop/authenticate.php";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,6 +109,7 @@ public class LoginActivity extends AppCompatActivity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        Log.i("tagconvertstr", "["+response+"]");
                         try {
 
                             JSONObject jsonObject = new JSONObject(response);
