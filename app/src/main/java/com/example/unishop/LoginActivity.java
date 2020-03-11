@@ -38,8 +38,7 @@ public class LoginActivity extends AppCompatActivity {
     private ProgressDialog loading;
 
     //login url
-    private static String LOGIN_URL = "http://110.110.11.96/unishop/authenticate.php";
-
+    private static String LOGIN_URL = "http://histogenetic-exhaus.000webhostapp.com/unishop/authenticate.php";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

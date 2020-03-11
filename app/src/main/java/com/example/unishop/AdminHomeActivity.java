@@ -1,13 +1,20 @@
 package com.example.unishop;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Menu;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 
+import androidx.annotation.NonNull;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -39,7 +46,7 @@ public class AdminHomeActivity extends AppCompatActivity {
         // Passing each menu ID as a set of Ids because each
         // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
-                R.id.nav_home, R.id.nav_items_manage, R.id.nav_slideshow)
+                R.id.nav_home, R.id.nav_items_manage, R.id.nav_consultants_manage)
                 .setDrawerLayout(drawer)
                 .build();
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
@@ -52,6 +59,52 @@ public class AdminHomeActivity extends AppCompatActivity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.admin_home, menu);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        // get item id
+        int id = item.getItemId();
+        if (id == R.id.action_logout){
+            showLogoutDialogue();
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void showLogoutDialogue() {
+        //AlertDialog
+        AlertDialog.Builder builder= new AlertDialog.Builder(AdminHomeActivity.this);
+        //set Layout Linear Layout
+        LinearLayout linearLayout = new LinearLayout(AdminHomeActivity.this);
+        // Views to set in dialog
+        final TextView textView = new TextView(AdminHomeActivity.this);
+        textView.setText("Are you sure you want to exit?");
+        textView.setTextSize(20);
+        linearLayout.addView(textView);
+        linearLayout.setPadding(10,10,10,10);
+        builder.setView(linearLayout);
+
+
+        //cancel button
+        builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //dismiss dialog
+                dialog.dismiss();
+            }
+        });
+
+        //Reset pin button
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                startActivity(new Intent(new Intent(AdminHomeActivity.this, LoginActivity.class)));
+                finish();
+            }
+        });
+
+        //create and show dialog
+        builder.create().show();
     }
 
     @Override

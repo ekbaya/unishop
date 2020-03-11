@@ -8,5 +8,11 @@
     <color name="colorWhite">#ffffff</color>
     <color name="colorBlue">#00A6FF</color>
     <color name="colorBlack">#000000</color>
+    <color name="colorOrange">#FF4500</color>
+    <color name="colorBlue2">#292a6a</color>
+    <color name="colorOrangeTiger">#F17836</color>
+    <color name="colorGreen">#32CD32</color>
+    <color name="colorGray">#808080</color>
+    <color name="colorDark">#131212</color>
 
 </resources>
