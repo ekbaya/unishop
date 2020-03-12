@@ -42,6 +42,7 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
             <androidx.cardview.widget.CardView
+                android:id="@+id/addNewUserCard"
                 android:layout_marginTop="10dp"
                 android:layout_below="@id/general"
                 android:layout_width="match_parent"

@@ -40,6 +40,7 @@ public class LoginActivity extends AppCompatActivity {
 
     //login url
     //private static String LOGIN_URL = "http://histogenetic-exhaus.000webhostapp.com/unishop/authenticate.php";
+    //private static String LOGIN_URL = "https://histogenetic-exhaus.000webhostapp.com/unishop/authenticate.php"; // androids 9+
     private static String LOGIN_URL = "http://110.110.11.96/unishop/authenticate.php";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
