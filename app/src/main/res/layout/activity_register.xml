@@ -81,6 +81,7 @@
                 android:layout_marginTop="10dp"
                 android:textColor="@color/colorDark"
                 android:textSize="18sp"
+                app:passwordToggleEnabled="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 

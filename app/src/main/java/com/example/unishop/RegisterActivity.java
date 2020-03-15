@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -52,9 +53,8 @@ public class RegisterActivity extends AppCompatActivity {
     private ProgressDialog loading;
 
     //register url
-    //private static String REGISTER_URL = "http://histogenetic-exhaus.000webhostapp.com/unishop/create_user.php"; // 000webhost
-    //private static String REGISTER_URL = "https://histogenetic-exhaus.000webhostapp.com/unishop/create_user.php"; // androids 9+
-    private static String REGISTER_URL = "http://110.110.11.96/unishop/create_user.php";  // my laptop
+    private static String REGISTER_URL = "https://histogenetic-exhaus.000webhostapp.com/unishop/create_user.php"; // to include androids 9+
+    //private static String REGISTER_URL = "http://110.110.11.96/unishop/create_user.php";  // my laptop
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,7 +122,7 @@ public class RegisterActivity extends AppCompatActivity {
                     }
                     else {
                        // register user
-                        registerNewUser(first_name,last_name,u_email,u_phone,u_id_number,password,user_role,user_id);
+                       registerNewUser(first_name,last_name,u_email,u_phone,u_id_number,password,user_role,user_id);
                     }
 
                 }
@@ -191,6 +191,13 @@ public class RegisterActivity extends AppCompatActivity {
                                     public void onClick(DialogInterface dialog, int which) {
                                         //dismiss dialog
                                         dialog.dismiss();
+                                        firstnameEt.setText("");
+                                        lastnameEt.setText("");
+                                        emailEt.setText("");
+                                        phoneEt.setText("");
+                                        passwordEt.setText("");
+                                        id_numberEt.setText("");
+                                        radioGroup.clearCheck();
                                     }
                                 });
                                 //create and show dialog

@@ -15,4 +15,8 @@
     <string name="home_second">Home Second</string>
     <string name="title_activity_sales_consultant">SalesConsultantActivity</string>
     <string name="title_activity_admin_home">AdminHomeActivity</string>
+    <string name="title_activity_dasboard">DasboardActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_categories">Categories</string>
+    <string name="title_account">Account</string>
 </resources>

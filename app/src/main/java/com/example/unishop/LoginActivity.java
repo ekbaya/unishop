@@ -31,6 +31,8 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+import consultant.DasboardActivity;
+
 public class LoginActivity extends AppCompatActivity {
     EditText emailET,passwordET;
     TextView forgetPasswordTV;
@@ -39,9 +41,8 @@ public class LoginActivity extends AppCompatActivity {
     private ProgressDialog loading;
 
     //login url
-    //private static String LOGIN_URL = "http://histogenetic-exhaus.000webhostapp.com/unishop/authenticate.php";
-    //private static String LOGIN_URL = "https://histogenetic-exhaus.000webhostapp.com/unishop/authenticate.php"; // androids 9+
-    private static String LOGIN_URL = "http://110.110.11.96/unishop/authenticate.php";
+    private static String LOGIN_URL = "https://histogenetic-exhaus.000webhostapp.com/unishop/authenticate.php"; //to include androids 9+
+    //private static String LOGIN_URL = "http://110.110.11.96/unishop/authenticate.php"; //my laptop
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -134,6 +135,17 @@ public class LoginActivity extends AppCompatActivity {
                                     if (role.equals("admin")){
                                         //taking user to admin panel
                                         Intent intent = new Intent(LoginActivity.this, AdminHomeActivity.class);
+                                        intent.putExtra("user_id",user_id);
+                                        intent.putExtra("email",email);
+                                        intent.putExtra("phone",phone);
+                                        intent.putExtra("firstname",firstname);
+                                        intent.putExtra("lastname",lastname);
+                                        startActivity(intent);
+                                        finish();
+                                    }
+                                    if (role.equals("consultant")){
+                                        //taking user to admin panel
+                                        Intent intent = new Intent(LoginActivity.this, DasboardActivity.class);
                                         intent.putExtra("user_id",user_id);
                                         intent.putExtra("email",email);
                                         intent.putExtra("phone",phone);
