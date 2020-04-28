@@ -19,4 +19,6 @@
     <string name="title_home">Home</string>
     <string name="title_categories">Categories</string>
     <string name="title_account">Account</string>
+    <string name="consultants">See all available Consultants</string>
+    <string name="network_text">You seem to be offline, check your internet connection and try again</string>
 </resources>

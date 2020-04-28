@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.unishop.data.SharedHelper;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
@@ -26,8 +27,6 @@ import androidx.appcompat.widget.Toolbar;
 public class AdminHomeActivity extends AppCompatActivity {
     //views
     private  TextView headerTv;
-
-    private Intent intent;
 
     private AppBarConfiguration mAppBarConfiguration;
 
@@ -53,7 +52,7 @@ public class AdminHomeActivity extends AppCompatActivity {
                 R.id.nav_home, R.id.nav_items_manage, R.id.nav_consultants_manage)
                 .setDrawerLayout(drawer)
                 .build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        NavController navController = Navigation.findNavController(this, R.id.nav_admin_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
 
@@ -61,9 +60,8 @@ public class AdminHomeActivity extends AppCompatActivity {
         headerTv = (TextView) headerView.findViewById(R.id.headerTv);
 
 
-        intent = getIntent();
-        String firstname = intent.getStringExtra("firstname");
-        String lastname = intent.getStringExtra("lastname");
+        String firstname = SharedHelper.getKey(AdminHomeActivity.this, "firstname");
+        String lastname = SharedHelper.getKey(AdminHomeActivity.this, "lastname");
         headerTv.setText(firstname+" "+lastname);
 
 
@@ -113,6 +111,7 @@ public class AdminHomeActivity extends AppCompatActivity {
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                SharedHelper.clearSharedPreferences(AdminHomeActivity.this);
                 startActivity(new Intent(new Intent(AdminHomeActivity.this, LoginActivity.class)));
                 finish();
             }
@@ -124,7 +123,7 @@ public class AdminHomeActivity extends AppCompatActivity {
 
     @Override
     public boolean onSupportNavigateUp() {
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        NavController navController = Navigation.findNavController(this, R.id.nav_admin_host_fragment);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
     }

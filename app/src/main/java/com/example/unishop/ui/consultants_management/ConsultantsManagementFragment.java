@@ -11,12 +11,13 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
 import com.example.unishop.AdminHomeActivity;
+import com.example.unishop.ConsultantsActivity;
 import com.example.unishop.R;
 import com.example.unishop.RegisterActivity;
 
 public class ConsultantsManagementFragment extends Fragment {
     //views
-    private CardView addNewUserCard;
+    private CardView addNewUserCard, view_consultants_cardView;
 
     //Extracting data from the intent
     private Intent intent;
@@ -30,6 +31,7 @@ public class ConsultantsManagementFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_consultants_management, container, false);
         //init views
         addNewUserCard = view.findViewById(R.id.addNewUserCard);
+        view_consultants_cardView = view.findViewById(R.id.view_consultants_cardView);
 
         intent = getActivity().getIntent();
         user_id = intent.getStringExtra("user_id");
@@ -42,11 +44,14 @@ public class ConsultantsManagementFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), RegisterActivity.class);
-                intent.putExtra("user_id",user_id);
-                intent.putExtra("email",email);
-                intent.putExtra("phone",phone);
-                intent.putExtra("firstname",firstname);
-                intent.putExtra("lastname",lastname);
+                startActivity(intent);
+            }
+        });
+
+        view_consultants_cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), ConsultantsActivity.class);
                 startActivity(intent);
             }
         });

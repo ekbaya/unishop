@@ -23,6 +23,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.unishop.data.SharedHelper;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -42,11 +43,29 @@ public class LoginActivity extends AppCompatActivity {
 
     //login url
     private static String LOGIN_URL = "https://histogenetic-exhaus.000webhostapp.com/unishop/authenticate.php"; //to include androids 9+
-    //private static String LOGIN_URL = "http://110.110.11.96/unishop/authenticate.php"; //my laptop
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        Log.d("Loggedin", String.valueOf(SharedHelper.getBoolKey(LoginActivity.this, "logged_in", false)));
+        String role = String.valueOf(SharedHelper.getKey(LoginActivity.this, "role"));
+
+        if (SharedHelper.getBoolKey(LoginActivity.this, "logged_in", false)){
+            //check user role
+            if (role.equals("admin")){
+                //taking user to admin panel
+                Intent intent = new Intent(LoginActivity.this, AdminHomeActivity.class);
+                startActivity(intent);
+                finish();
+            }
+            if (role.equals("consultant")){
+                //taking user to admin panel
+                Intent intent = new Intent(LoginActivity.this, DasboardActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        }
 
         emailET = findViewById(R.id.emailET);
         passwordET = findViewById(R.id.passwordET);
@@ -122,40 +141,35 @@ public class LoginActivity extends AppCompatActivity {
                             if (success){
                                 loading.dismiss();
                                 Toast.makeText(LoginActivity.this, "Login successfully...", Toast.LENGTH_SHORT).show();
-                                for (int i = 0; i < data.length(); i++){
-                                    JSONObject object = data.getJSONObject(i);
-                                    String user_id = object.getString("user_id");
-                                    String email = object.getString("email");
-                                    String phone = object.getString("phone");
-                                    String firstname = object.getString("firstname");
-                                    String lastname = object.getString("lastname");
-                                    String role = object.getString("role");
+                                JSONObject object = data.getJSONObject(0);
+                                String user_id = object.getString("user_id");
+                                String email = object.getString("email");
+                                String phone = object.getString("phone");
+                                String firstname = object.getString("firstname");
+                                String lastname = object.getString("lastname");
+                                String role = object.getString("role");
 
-                                    //check user role
-                                    if (role.equals("admin")){
-                                        //taking user to admin panel
-                                        Intent intent = new Intent(LoginActivity.this, AdminHomeActivity.class);
-                                        intent.putExtra("user_id",user_id);
-                                        intent.putExtra("email",email);
-                                        intent.putExtra("phone",phone);
-                                        intent.putExtra("firstname",firstname);
-                                        intent.putExtra("lastname",lastname);
-                                        startActivity(intent);
-                                        finish();
-                                    }
-                                    if (role.equals("consultant")){
-                                        //taking user to admin panel
-                                        Intent intent = new Intent(LoginActivity.this, DasboardActivity.class);
-                                        intent.putExtra("user_id",user_id);
-                                        intent.putExtra("email",email);
-                                        intent.putExtra("phone",phone);
-                                        intent.putExtra("firstname",firstname);
-                                        intent.putExtra("lastname",lastname);
-                                        startActivity(intent);
-                                        finish();
-                                    }
+                                //save data to SharedPreference
+                                SharedHelper.putKey(LoginActivity.this,"user_id", user_id);
+                                SharedHelper.putKey(LoginActivity.this,"email", email);
+                                SharedHelper.putKey(LoginActivity.this,"phone", phone);
+                                SharedHelper.putKey(LoginActivity.this,"firstname", firstname);
+                                SharedHelper.putKey(LoginActivity.this,"lastname", lastname);
+                                SharedHelper.putKey(LoginActivity.this,"role", role);
+                                SharedHelper.putKey(LoginActivity.this, "logged_in", true);
 
-
+                                //check user role
+                                if (role.equals("admin")){
+                                    //taking user to admin panel
+                                    Intent intent = new Intent(LoginActivity.this, AdminHomeActivity.class);
+                                    startActivity(intent);
+                                    finish();
+                                }
+                                if (role.equals("consultant")){
+                                    //taking user to admin panel
+                                    Intent intent = new Intent(LoginActivity.this, DasboardActivity.class);
+                                    startActivity(intent);
+                                    finish();
                                 }
 
                             }

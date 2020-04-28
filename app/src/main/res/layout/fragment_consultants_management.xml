@@ -87,6 +87,7 @@
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
             <androidx.cardview.widget.CardView
+                android:id="@+id/view_consultants_cardView"
                 android:layout_below="@id/general"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

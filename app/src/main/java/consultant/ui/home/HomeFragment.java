@@ -20,6 +20,7 @@ import androidx.fragment.app.Fragment;
 import com.example.unishop.AdminHomeActivity;
 import com.example.unishop.LoginActivity;
 import com.example.unishop.R;
+import com.example.unishop.data.SharedHelper;
 
 public class HomeFragment extends Fragment {
 
@@ -80,6 +81,7 @@ public class HomeFragment extends Fragment {
         builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                SharedHelper.clearSharedPreferences(getActivity());
                 startActivity(new Intent(new Intent(getActivity(), LoginActivity.class)));
             }
         });

@@ -3,6 +3,7 @@
     package="com.example.unishop">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -11,9 +12,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".ConsultantsActivity"></activity>
         <activity
             android:name="consultant.DasboardActivity"
-            android:label="@string/title_activity_dasboard"></activity>
+            android:label="@string/title_activity_dasboard" />
         <activity android:name=".RegisterActivity" />
         <activity
             android:name=".AdminHomeActivity"

@@ -26,6 +26,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.RequestFuture;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.unishop.data.SharedHelper;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -39,14 +40,6 @@ public class RegisterActivity extends AppCompatActivity {
     RadioGroup radioGroup;
     RadioButton admin_radioButton,consultant_radioButton;
     Button registerBtn;
-
-    //Extracting data from the intent
-    private Intent intent;
-    private String user_id;
-    private String email;
-    private String phone;
-    private String firstname;
-    private String lastname;
 
     private String user_role;
 
@@ -62,13 +55,6 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-
-        intent = getIntent();
-        user_id = intent.getStringExtra("user_id");
-        email = intent.getStringExtra("email");
-        phone = intent.getStringExtra("phone");
-        firstname = intent.getStringExtra("firstname");
-        lastname = intent.getStringExtra("lastname");
 
         //init views
         firstnameEt = findViewById(R.id.firstnameEt);
@@ -122,7 +108,7 @@ public class RegisterActivity extends AppCompatActivity {
                     }
                     else {
                        // register user
-                       registerNewUser(first_name,last_name,u_email,u_phone,u_id_number,password,user_role,user_id);
+                       registerNewUser(first_name,last_name,u_email,u_phone,u_id_number,password,user_role);
                     }
 
                 }
@@ -157,8 +143,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void registerNewUser(final String first_name, final String last_name, final String u_email,
-                                 final String u_phone, final String u_id_number, final String password, final String user_role,
-                                 final String user_id) {
+                                 final String u_phone, final String u_id_number, final String password, final String user_role) {
         loading.setMessage("Registering...");
         loading.show();
 
@@ -291,7 +276,7 @@ public class RegisterActivity extends AppCompatActivity {
                 params.put("password", password);
                 params.put("phone", u_phone);
                 params.put("role", user_role);
-                params.put("user_id", user_id);
+                params.put("user_id", SharedHelper.getKey(RegisterActivity.this,"user_id"));
                 return params;
             }
         };
@@ -310,11 +295,6 @@ public class RegisterActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         Intent intent = new Intent(RegisterActivity.this, AdminHomeActivity.class);
-        intent.putExtra("user_id",user_id);
-        intent.putExtra("email",email);
-        intent.putExtra("phone",phone);
-        intent.putExtra("firstname",firstname);
-        intent.putExtra("lastname",lastname);
         startActivity(intent);
         finish();
     }
