@@ -1,6 +1,7 @@
 package com.example.unishop.data.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.unishop.ConsultantDetailsActivity;
 import com.example.unishop.R;
 import com.example.unishop.data.models.ModelConsultant;
 
@@ -35,13 +37,14 @@ public class ConsultantAdapter extends RecyclerView.Adapter<ConsultantAdapter.My
     @Override
     public void onBindViewHolder(@NonNull MyHolder holder, int position) {
         //get data
-        String user_id = consultantList.get(position).getUser_id();
-        String phone = consultantList.get(position).getPhone();
-        String email = consultantList.get(position).getEmail();
-        String firstname = consultantList.get(position).getFirstname();
-        String lastname = consultantList.get(position).getLastname();
-        String date_created = consultantList.get(position).getDate_created();
-        String created_by = consultantList.get(position).getCreated_by();
+        final String user_id = consultantList.get(position).getUser_id();
+        final String phone = consultantList.get(position).getPhone();
+        final String email = consultantList.get(position).getEmail();
+        final String id_number = consultantList.get(position).getId_number();
+        final String firstname = consultantList.get(position).getFirstname();
+        final String lastname = consultantList.get(position).getLastname();
+        final String date_created = consultantList.get(position).getDate_created();
+        final String created_by = consultantList.get(position).getCreated_by();
 
         //set Data
         holder.nameTv.setText(firstname+" "+lastname);
@@ -50,7 +53,16 @@ public class ConsultantAdapter extends RecyclerView.Adapter<ConsultantAdapter.My
         holder.cdUserEntry.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(context, ConsultantDetailsActivity.class);
+                intent.putExtra("user_id", user_id);
+                intent.putExtra("phone", phone);
+                intent.putExtra("email", email);
+                intent.putExtra("id_number", id_number);
+                intent.putExtra("firstname", firstname);
+                intent.putExtra("lastname", lastname);
+                intent.putExtra("date_created", date_created);
+                intent.putExtra("created_by", created_by);
+                context.startActivity(intent);
             }
         });
 
