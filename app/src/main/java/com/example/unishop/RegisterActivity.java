@@ -45,10 +45,6 @@ public class RegisterActivity extends AppCompatActivity {
 
     private ProgressDialog loading;
 
-    //register url
-    private static String REGISTER_URL = "https://histogenetic-exhaus.000webhostapp.com/unishop/create_user.php"; // to include androids 9+
-    //private static String REGISTER_URL = "http://110.110.11.96/unishop/create_user.php";  // my laptop
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -147,7 +143,7 @@ public class RegisterActivity extends AppCompatActivity {
         loading.setMessage("Registering...");
         loading.show();
 
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, REGISTER_URL,
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.REGISTER_URL),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {

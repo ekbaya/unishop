@@ -133,6 +133,7 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/updateCardView"
                 app:cardCornerRadius="5dp"
                 app:cardElevation="-10dp"
                 android:layout_marginRight="30dp"

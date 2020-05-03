@@ -12,17 +12,26 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ConsultantDetailsActivity"></activity>
+        <activity android:name=".UpdatePhoneActivity"></activity>
+        <activity
+            android:name=".ConsultantDetailsActivity"
+            android:screenOrientation="portrait" />
         <activity android:name=".ConsultantsActivity" />
         <activity
             android:name="consultant.DasboardActivity"
-            android:label="@string/title_activity_dasboard" />
-        <activity android:name=".RegisterActivity" />
+            android:label="@string/title_activity_dasboard"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".RegisterActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".AdminHomeActivity"
             android:label="@string/title_activity_admin_home"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".LoginActivity">
+        <activity
+            android:name=".LoginActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

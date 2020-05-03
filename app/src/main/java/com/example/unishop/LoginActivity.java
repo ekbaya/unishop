@@ -41,8 +41,6 @@ public class LoginActivity extends AppCompatActivity {
 
     private ProgressDialog loading;
 
-    //login url
-    private static String LOGIN_URL = "https://histogenetic-exhaus.000webhostapp.com/unishop/authenticate.php"; //to include androids 9+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -126,7 +124,7 @@ public class LoginActivity extends AppCompatActivity {
     private void loginUser(final String email, final String password) {
         loading.setMessage("Signing in...");
         loading.show();
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, LOGIN_URL,
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.LOGIN_URL),
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -176,78 +174,14 @@ public class LoginActivity extends AppCompatActivity {
                             else {
                                 loading.dismiss();
                                 //AlertDialog
-                                AlertDialog.Builder builder= new AlertDialog.Builder(LoginActivity.this);
-                                builder.setTitle("Error!!!");
-                                //set Layout Linear Layout
-                                LinearLayout linearLayout = new LinearLayout(LoginActivity.this);
-                                // Views to set in dialog
-                                final TextView textView = new TextView(LoginActivity.this);
-                                textView.setText(message);
-                                textView.setTextSize(20);
-                                linearLayout.addView(textView);
-                                linearLayout.setPadding(10,10,10,10);
-                                builder.setView(linearLayout);
-
-
-                                //cancel button
-                                builder.setNegativeButton("Try again", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        //dismiss dialog
-                                        dialog.dismiss();
-                                    }
-                                });
-
-                                //Reset pin button
-                                builder.setPositiveButton("Reset Pin", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        //showResetPinDialogue();
-                                    }
-                                });
-
-                                //create and show dialog
-                                builder.create().show();
+                               showDialogue(message);
                             }
 
 
 
                         }catch (JSONException e){
                             loading.dismiss();
-                            //AlertDialog
-                            AlertDialog.Builder builder= new AlertDialog.Builder(LoginActivity.this);
-                            builder.setTitle("Error!!!");
-                            //set Layout Linear Layout
-                            LinearLayout linearLayout = new LinearLayout(LoginActivity.this);
-                            // Views to set in dialog
-                            final TextView textView = new TextView(LoginActivity.this);
-                            textView.setText("..."+e.getMessage());
-                            textView.setTextSize(20);
-                            linearLayout.addView(textView);
-                            linearLayout.setPadding(10,10,10,10);
-                            builder.setView(linearLayout);
-
-                            //cancel button
-                            builder.setNegativeButton("Try again", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    //dismiss dialog
-                                    dialog.dismiss();
-                                }
-                            });
-
-                            //Reset pin button
-                            builder.setPositiveButton("Reset Pin", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    //showResetPinDialogue();
-                                }
-                            });
-
-                            //create and show dialog
-                            builder.create().show();
-
-
+                            showDialogue(e.getMessage());
                         }
                     }
                 }
@@ -256,38 +190,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
                 loading.dismiss();
                 //AlertDialog
-                AlertDialog.Builder builder= new AlertDialog.Builder(LoginActivity.this);
-                builder.setTitle("Error!!!");
-                //set Layout Linear Layout
-                LinearLayout linearLayout = new LinearLayout(LoginActivity.this);
-                // Views to set in dialog
-                final TextView textView = new TextView(LoginActivity.this);
-                textView.setText("Ops! some error occurred check and try again");
-                textView.setTextSize(20);
-                linearLayout.addView(textView);
-                linearLayout.setPadding(10,10,10,10);
-                builder.setView(linearLayout);
-
-                //cancel button
-                builder.setNegativeButton("Try again", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        //dismiss dialog
-                        dialog.dismiss();
-                    }
-                });
-
-                //Reset pin button
-                builder.setPositiveButton("Reset Pin", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                       // showResetPinDialogue();
-                    }
-                });
-
-                //create and show dialog
-                builder.create().show();
-
+                showDialogue(getString(R.string.error_text));
             }
         }){
             @Override
@@ -301,5 +204,40 @@ public class LoginActivity extends AppCompatActivity {
 
         RequestQueue requestQueue = Volley.newRequestQueue(this);
         requestQueue.add(stringRequest);
+    }
+
+    public void showDialogue(String message){
+        AlertDialog.Builder builder= new AlertDialog.Builder(LoginActivity.this);
+        builder.setTitle("Error!!!");
+        //set Layout Linear Layout
+        LinearLayout linearLayout = new LinearLayout(LoginActivity.this);
+        // Views to set in dialog
+        final TextView textView = new TextView(LoginActivity.this);
+        textView.setText(message);
+        textView.setTextSize(20);
+        linearLayout.addView(textView);
+        linearLayout.setPadding(10,10,10,10);
+        builder.setView(linearLayout);
+
+
+        //cancel button
+        builder.setNegativeButton("Try again", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //dismiss dialog
+                dialog.dismiss();
+            }
+        });
+
+        //Reset pin button
+        builder.setPositiveButton("Reset Pin", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //showResetPinDialogue();
+            }
+        });
+
+        //create and show dialog
+        builder.create().show();
     }
 }

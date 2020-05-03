@@ -14,10 +14,11 @@ import com.example.unishop.AdminHomeActivity;
 import com.example.unishop.ConsultantsActivity;
 import com.example.unishop.R;
 import com.example.unishop.RegisterActivity;
+import com.example.unishop.UpdatePhoneActivity;
 
 public class ConsultantsManagementFragment extends Fragment {
     //views
-    private CardView addNewUserCard, view_consultants_cardView;
+    private CardView addNewUserCard, view_consultants_cardView, updateCardView;
 
     //Extracting data from the intent
     private Intent intent;
@@ -32,6 +33,7 @@ public class ConsultantsManagementFragment extends Fragment {
         //init views
         addNewUserCard = view.findViewById(R.id.addNewUserCard);
         view_consultants_cardView = view.findViewById(R.id.view_consultants_cardView);
+        updateCardView = view.findViewById(R.id.updateCardView);
 
         intent = getActivity().getIntent();
         user_id = intent.getStringExtra("user_id");
@@ -52,6 +54,14 @@ public class ConsultantsManagementFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), ConsultantsActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        updateCardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), UpdatePhoneActivity.class);
                 startActivity(intent);
             }
         });

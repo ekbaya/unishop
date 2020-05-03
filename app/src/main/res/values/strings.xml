@@ -21,4 +21,13 @@
     <string name="title_account">Account</string>
     <string name="consultants">See all available Consultants</string>
     <string name="network_text">You seem to be offline, check your internet connection and try again</string>
+    <string name="error_text">Ops! some error occurred check and try again</string>
+
+
+    <!--    Urls-->
+    <string name="LOGIN_URL">https://histogenetic-exhaus.000webhostapp.com/unishop/authenticate.php</string>
+    <string name="REGISTER_URL">https://histogenetic-exhaus.000webhostapp.com/unishop/create_user.php</string>
+    <string name="CONSULTANT_URL">https://histogenetic-exhaus.000webhostapp.com/unishop/list_consultants.php</string>
+    <string name="USER_PROFILE_URL">https://histogenetic-exhaus.000webhostapp.com/unishop/user_profile.php</string>
+    <string name="UPDATE_PHONE_URL">https://histogenetic-exhaus.000webhostapp.com/unishop/update_user_phone.php</string>
 </resources>

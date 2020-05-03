@@ -5,7 +5,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ConsultantDetailsActivity">
+    tools:context=".ConsultantDetailsActivity"
+    android:background="@color/mintcream">
 
 
     <androidx.core.widget.NestedScrollView
@@ -144,12 +145,17 @@
                             android:layout_marginTop="10dp"
                             android:textSize="18sp"
                             android:textStyle="bold"/>
+                        <ProgressBar
+                            android:id="@+id/progressBar"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"/>
                         <androidx.appcompat.widget.AppCompatTextView
                             android:id="@+id/referred_byTv"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="referred_by"
-                            android:layout_marginBottom="10dp"/>
+                            android:layout_marginBottom="10dp"
+                            android:visibility="gone"/>
                     </androidx.appcompat.widget.LinearLayoutCompat>
                 </androidx.appcompat.widget.LinearLayoutCompat>
             </androidx.cardview.widget.CardView>

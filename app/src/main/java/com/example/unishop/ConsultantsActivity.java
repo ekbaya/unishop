@@ -32,10 +32,6 @@ public class ConsultantsActivity extends AppCompatActivity {
     private ProgressBar consultant_dialog;
     private ConsultantAdapter consultantAdapter;
 
-    //consultants url
-    private static String CONSULTANT_URL = "https://histogenetic-exhaus.000webhostapp.com/unishop/list_consultants.php";
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,7 +58,7 @@ public class ConsultantsActivity extends AppCompatActivity {
     }
 
     private void getAllConsultants() {
-        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, CONSULTANT_URL,
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, getString(R.string.CONSULTANT_URL),
                 null,
                 new Response.Listener<JSONArray>() {
                     @Override
