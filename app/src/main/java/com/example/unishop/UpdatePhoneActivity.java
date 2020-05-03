@@ -83,6 +83,8 @@ public class UpdatePhoneActivity extends AppCompatActivity {
 
                             if (success){
                                 Toast.makeText(UpdatePhoneActivity.this, message, Toast.LENGTH_SHORT).show();
+                                emailEt.setText("");
+                                phoneEt.setText("");
                             }
                             else {
                                 Toast.makeText(UpdatePhoneActivity.this, message+" , check the email and try again", Toast.LENGTH_SHORT).show();
