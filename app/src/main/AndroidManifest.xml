@@ -12,7 +12,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".UpdatePhoneActivity"></activity>
+        <activity android:name=".AddProductActivity2"
+            android:screenOrientation="portrait" />
+        <activity android:name=".AddProductActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".UpdatePhoneActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ConsultantDetailsActivity"
             android:screenOrientation="portrait" />

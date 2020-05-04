@@ -78,7 +78,7 @@
             android:textSize="18sp"
             android:layout_marginLeft="35dp"/>
         <androidx.cardview.widget.CardView
-            android:id="@+id/applyCard"
+            android:id="@+id/addItemCard"
             android:layout_below="@id/general"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -132,7 +132,7 @@
         </androidx.cardview.widget.CardView>
         <androidx.cardview.widget.CardView
             android:id="@+id/withdrawCard"
-            android:layout_below="@id/applyCard"
+            android:layout_below="@id/addItemCard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:cardCornerRadius="5dp"
