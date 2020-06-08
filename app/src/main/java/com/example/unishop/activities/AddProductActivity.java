@@ -1,4 +1,4 @@
-package com.example.unishop;
+package com.example.unishop.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.example.unishop.R;
 import com.example.unishop.data.SharedHelper;
 
 public class AddProductActivity extends AppCompatActivity {

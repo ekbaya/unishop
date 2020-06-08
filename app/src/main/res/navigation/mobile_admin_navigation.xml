@@ -8,19 +8,19 @@
 
     <fragment
         android:id="@+id/nav_home"
-        android:name="com.example.unishop.ui.home.HomeFragment"
+        android:name="com.example.unishop.fragments.HomeFragment"
         android:label="@string/menu_home"
         tools:layout="@layout/fragment_admin_home" />
 
     <fragment
         android:id="@+id/nav_items_manage"
-        android:name="com.example.unishop.ui.items_management.ItemsManagementFragment"
+        android:name="com.example.unishop.fragments.ItemsManagementFragment"
         android:label="@string/menu_items_manage"
         tools:layout="@layout/fragment_itmes_management" />
 
     <fragment
         android:id="@+id/nav_consultants_manage"
-        android:name="com.example.unishop.ui.consultants_management.ConsultantsManagementFragment"
+        android:name="com.example.unishop.fragments.ConsultantsManagementFragment"
         android:label="@string/menu_consultants_manage"
         tools:layout="@layout/fragment_consultants_management" />
 </navigation>

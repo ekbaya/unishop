@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.unishop.ConsultantDetailsActivity;
+import com.example.unishop.activities.ConsultantDetailsActivity;
 import com.example.unishop.R;
 import com.example.unishop.data.models.ModelConsultant;
 

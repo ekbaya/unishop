@@ -1,4 +1,4 @@
-package com.example.unishop;
+package com.example.unishop.activities;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.unishop.R;
 import com.example.unishop.data.SharedHelper;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;

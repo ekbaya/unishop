@@ -1,4 +1,4 @@
-package com.example.unishop;
+package com.example.unishop.utilities;
 
 import android.content.Context;
 import android.net.ConnectivityManager;

@@ -4,6 +4,8 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -12,30 +14,35 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".AddProductActivity2"
-            android:screenOrientation="portrait" />
-        <activity android:name=".AddProductActivity"
-            android:screenOrientation="portrait" />
-        <activity android:name=".UpdatePhoneActivity"
+        <activity android:name=".activities.UpdateItemsActivity"></activity>
+        <activity android:name=".activities.PermissionsActivity" />
+        <activity
+            android:name=".activities.AddProductActivity2"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ConsultantDetailsActivity"
+            android:name=".activities.AddProductActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".ConsultantsActivity" />
+        <activity
+            android:name=".activities.UpdatePhoneActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".activities.ConsultantDetailsActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activities.ConsultantsActivity" />
         <activity
             android:name="consultant.DasboardActivity"
             android:label="@string/title_activity_dasboard"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".RegisterActivity"
+            android:name=".activities.RegisterActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".AdminHomeActivity"
+            android:name=".activities.AdminHomeActivity"
             android:label="@string/title_activity_admin_home"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".activities.LoginActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

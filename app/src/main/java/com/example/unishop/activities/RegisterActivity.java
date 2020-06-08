@@ -1,4 +1,4 @@
-package com.example.unishop;
+package com.example.unishop.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -16,16 +16,15 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.RequestFuture;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.unishop.R;
 import com.example.unishop.data.SharedHelper;
 
 import org.json.JSONException;

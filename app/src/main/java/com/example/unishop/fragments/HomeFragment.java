@@ -1,4 +1,4 @@
-package com.example.unishop.ui.home;
+package com.example.unishop.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

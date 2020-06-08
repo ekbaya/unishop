@@ -41,4 +41,6 @@ dependencies {
 
     //circular imageview
     implementation 'de.hdodenhof:circleimageview:3.1.0'
+    //toasty
+    implementation 'com.github.GrenderG:Toasty:1.4.2'
 }

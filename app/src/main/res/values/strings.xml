@@ -22,6 +22,7 @@
     <string name="consultants">See all available Consultants</string>
     <string name="network_text">You seem to be offline, check your internet connection and try again</string>
     <string name="error_text">Ops! some error occurred check and try again</string>
+    <string name="permissions_text">All the permissions are required in order to access the services, please allow</string>
 
 
     <!--    Urls-->
@@ -30,10 +31,10 @@
     <string name="CONSULTANT_URL">https://histogenetic-exhaus.000webhostapp.com/unishop/list_consultants.php</string>
     <string name="USER_PROFILE_URL">https://histogenetic-exhaus.000webhostapp.com/unishop/user_profile.php</string>
     <string name="UPDATE_PHONE_URL">https://histogenetic-exhaus.000webhostapp.com/unishop/update_user_phone.php</string>
+    <string name="ADD_ITEM_URL">https://histogenetic-exhaus.000webhostapp.com/unishop/add_item.php</string>
 
 
-
-<!--    Categories-->
+    <!--    Categories-->
     <string name="Healthy_and_Beauty">Healthy &amp; Beauty</string>
     <string name="Grocery">Grocery</string>
     <string name="Women_fashion">Women\'s Fashion</string>

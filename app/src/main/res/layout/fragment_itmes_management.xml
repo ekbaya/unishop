@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.items_management.ItemsManagementFragment"
+    tools:context=".fragments.ItemsManagementFragment"
     android:background="@color/backgroundColor">
 
 <androidx.core.widget.NestedScrollView
@@ -183,7 +183,7 @@
         </androidx.cardview.widget.CardView>
         <androidx.cardview.widget.CardView
             android:layout_below="@id/withdrawCard"
-            android:id="@+id/payLoanCard"
+            android:id="@+id/updateItemsCard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:cardCornerRadius="5dp"
@@ -215,7 +215,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:text="Change price"
+                        android:text="Update items       "
                         android:textSize="18sp"
                         android:textStyle="bold" />
 
@@ -223,7 +223,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="10dp"
-                        android:text="Change price of item" />
+                        android:text="update items  " />
                 </LinearLayout>
 
                 <ImageView
@@ -235,7 +235,7 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
         <androidx.cardview.widget.CardView
-            android:layout_below="@id/payLoanCard"
+            android:layout_below="@id/updateItemsCard"
             android:id="@+id/loanHistoryCard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

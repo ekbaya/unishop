@@ -17,8 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.example.unishop.AdminHomeActivity;
-import com.example.unishop.LoginActivity;
+import com.example.unishop.activities.LoginActivity;
 import com.example.unishop.R;
 import com.example.unishop.data.SharedHelper;
 
