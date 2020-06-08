@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.android.volley.NetworkError;
 import com.android.volley.VolleyError;
 import com.example.unishop.R;
 import com.example.unishop.api.AccountAPI;
@@ -157,7 +158,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onVolleyErrorResponse(VolleyError error) {
         accountAPI.hideDialogue();
-        Toasty.error(this, getString(R.string.error_text), Toasty.LENGTH_LONG).show();
+        if (error instanceof NetworkError){
+            Toasty.error(this, "Check your connection and try again", Toasty.LENGTH_LONG).show();
+        }
+        else Toasty.error(this, error.toString(), Toasty.LENGTH_LONG).show();
     }
 
     @Override
