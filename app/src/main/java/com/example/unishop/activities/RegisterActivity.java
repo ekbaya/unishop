@@ -16,7 +16,7 @@ import com.android.volley.NetworkError;
 import com.android.volley.VolleyError;
 import com.example.unishop.R;
 import com.example.unishop.api.AccountAPI;
-import com.example.unishop.services.AccountListiner;
+import com.example.unishop.services.AccountListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,7 +26,7 @@ import butterknife.ButterKnife;
 import es.dmoral.toasty.Toasty;
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener,
-        AccountListiner, RadioGroup.OnCheckedChangeListener {
+        AccountListener, RadioGroup.OnCheckedChangeListener {
     //views
     @BindView(R.id.firstnameEt) EditText firstnameEt;
     @BindView(R.id.lastnameEt) EditText lastnameEt;
@@ -55,7 +55,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         radioGroup.setOnCheckedChangeListener(this);
 
         accountAPI = new AccountAPI(this);
-        accountAPI.setAccountListiner(this);
+        accountAPI.setAccountListener(this);
 
     }
 

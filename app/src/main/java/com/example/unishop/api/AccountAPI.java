@@ -13,7 +13,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.unishop.R;
 import com.example.unishop.data.SharedHelper;
-import com.example.unishop.services.AccountListiner;
+import com.example.unishop.services.AccountListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class AccountAPI {
-    private AccountListiner accountListiner;
+    private AccountListener accountListener;
     private Context context;
     private ProgressDialog loading;
 
@@ -40,16 +40,16 @@ public class AccountAPI {
                         try {
 
                             JSONObject jsonObject = new JSONObject(response);
-                            accountListiner.onSuccessResponse(jsonObject);
+                            accountListener.onSuccessResponse(jsonObject);
                         }catch (JSONException e){
-                            accountListiner.onJSONObjectException(e);
+                            accountListener.onJSONObjectException(e);
                         }
                     }
                 }
                 , new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                accountListiner.onVolleyErrorResponse(error);
+                accountListener.onVolleyErrorResponse(error);
             }
         }){
             @Override
@@ -76,16 +76,16 @@ public class AccountAPI {
                         Log.i("tagconvertstr", "["+response+"]");
                         try {
                             JSONObject jsonObject = new JSONObject(response);
-                            accountListiner.onSuccessResponse(jsonObject);
+                            accountListener.onSuccessResponse(jsonObject);
                         } catch (JSONException e) {
-                            accountListiner.onJSONObjectException(e);
+                            accountListener.onJSONObjectException(e);
                         }
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        accountListiner.onVolleyErrorResponse(error);
+                        accountListener.onVolleyErrorResponse(error);
                     }
                 }){
             @Override
@@ -116,11 +116,11 @@ public class AccountAPI {
         loading.dismiss();
     }
 
-    public AccountListiner getAccountListiner() {
-        return accountListiner;
+    public AccountListener getAccountListener() {
+        return accountListener;
     }
 
-    public void setAccountListiner(AccountListiner accountListiner) {
-        this.accountListiner = accountListiner;
+    public void setAccountListener(AccountListener accountListener) {
+        this.accountListener = accountListener;
     }
 }

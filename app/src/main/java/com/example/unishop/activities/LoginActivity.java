@@ -18,7 +18,7 @@ import com.android.volley.VolleyError;
 import com.example.unishop.R;
 import com.example.unishop.api.AccountAPI;
 import com.example.unishop.data.SharedHelper;
-import com.example.unishop.services.AccountListiner;
+import com.example.unishop.services.AccountListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -30,7 +30,7 @@ import consultant.DasboardActivity;
 import es.dmoral.toasty.Toasty;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener,
-        AccountListiner {
+        AccountListener {
     @BindView(R.id.emailET) EditText emailET;
     @BindView(R.id.passwordET) EditText passwordET;
     @BindView(R.id.forgetPasswordTV) TextView forgetPasswordTV;
@@ -47,7 +47,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         checkUser();
         loginBtn.setOnClickListener(this);
         accountAPI = new AccountAPI(this);
-        accountAPI.setAccountListiner(this);
+        accountAPI.setAccountListener(this);
 
     }
 

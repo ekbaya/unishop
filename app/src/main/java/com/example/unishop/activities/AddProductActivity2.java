@@ -28,6 +28,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -35,7 +36,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.unishop.R;
+import com.example.unishop.api.ProductsAPI;
 import com.example.unishop.data.SharedHelper;
+import com.example.unishop.services.ProductsListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -45,13 +48,16 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AddProductActivity2 extends AppCompatActivity {
-    private EditText price, quantity, p_description;
-    private TextView p_image;
-    private Button submit;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import es.dmoral.toasty.Toasty;
 
-    // Progress Dialog
-    private ProgressDialog loading;
+public class AddProductActivity2 extends AppCompatActivity implements View.OnClickListener, ProductsListener {
+    @BindView(R.id.price) EditText price;
+    @BindView(R.id.quantity) EditText quantity;
+    @BindView(R.id.p_description) EditText p_description;
+    @BindView(R.id.p_image) TextView p_image;
+    @BindView(R.id.submit) Button submit;
 
     // permissions constants
     private static final int CAMERA_REQUEST_CODE = 100;
@@ -65,10 +71,10 @@ public class AddProductActivity2 extends AppCompatActivity {
 
     //url of picked
     Uri image_uri;
-
     Bitmap bitmap;
-
     String string_image;
+
+    private ProductsAPI productsAPI;
 
 
     @Override
@@ -77,35 +83,18 @@ public class AddProductActivity2 extends AppCompatActivity {
         setContentView(R.layout.activity_add_product2);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-
-        price = findViewById(R.id.price);
-        quantity = findViewById(R.id.quantity);
-        p_description = findViewById(R.id.p_description);
-        p_image = findViewById(R.id.p_image);
-        submit = findViewById(R.id.submit);
+        ButterKnife.bind(this);
 
 
         //init arrays of permissions
         cameraPermissions = new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
         storagePermissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
-        loading = new ProgressDialog(this);
+        p_image.setOnClickListener(this);
+        submit.setOnClickListener(this);
 
-        p_image.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-               pickImage();
-            }
-        });
-
-        submit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (validate()){
-                    addItem();
-                }
-            }
-        });
+        productsAPI = new ProductsAPI(this);
+        productsAPI.setProductsListener(this);
     }
 
     private void pickImage() {
@@ -138,61 +127,6 @@ public class AddProductActivity2 extends AppCompatActivity {
             return true;
         }
     }
-
-    private void addItem() {
-        loading.setMessage("Please wait...");
-        loading.show();
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.ADD_ITEM_URL), new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                loading.dismiss();
-                Log.i("JSONResponse", response);
-
-                try {
-                    JSONObject jsonObject = new JSONObject(response);
-                    Boolean success = jsonObject.getBoolean("success");
-                    String message = jsonObject.getString("message");
-
-                    if (success){
-                        Toast.makeText(AddProductActivity2.this, message, Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(new Intent(AddProductActivity2.this, AdminHomeActivity.class)));
-                        finish();
-                    }
-                    else {
-                        Toast.makeText(AddProductActivity2.this, message, Toast.LENGTH_SHORT).show();
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    Log.e("JSONException", e.toString());
-                }
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                loading.dismiss();
-                Log.e("VolleyError", error.toString());
-                Toast.makeText(AddProductActivity2.this, "Ops! some error occurred try again ", Toast.LENGTH_SHORT).show();
-
-            }
-        }){
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<>();
-                params.put("p_name", SharedHelper.getKey(AddProductActivity2.this, "p_name"));
-                params.put("p_category", SharedHelper.getKey(AddProductActivity2.this, "category"));
-                params.put("price", SharedHelper.getKey(AddProductActivity2.this, "price"));
-                params.put("quantity", SharedHelper.getKey(AddProductActivity2.this, "quantity"));
-                params.put("p_description", SharedHelper.getKey(AddProductActivity2.this, "description"));
-                params.put("image", SharedHelper.getKey(AddProductActivity2.this, "image"));
-                return params;
-            }
-        };
-
-        RequestQueue requestQueue = Volley.newRequestQueue(AddProductActivity2.this);
-        requestQueue.add(stringRequest);
-    }
-
     private void showImagePicDialog() {
         //show dialog containing options camera and gallery to pick the image
         // options to show in dialog
@@ -402,4 +336,48 @@ public class AddProductActivity2 extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    @Override
+    public void onClick(View v) {
+        if (v==p_image){
+            pickImage();
+        }
+        if (v==submit){
+            if (validate()){
+                productsAPI.addItem();
+                productsAPI.showDialogue();
+            }
+        }
+    }
+
+    @Override
+    public void onSuccessResponse(JSONObject object) throws JSONException {
+        productsAPI.hideDialogue();
+        boolean success = object.getBoolean("success");
+        String message = object.getString("message");
+
+        if (success){
+            Toasty.success(AddProductActivity2.this, message, Toasty.LENGTH_LONG).show();
+            startActivity(new Intent(new Intent(AddProductActivity2.this, AdminHomeActivity.class)));
+            finish();
+        }
+        else {
+            Toasty.error(AddProductActivity2.this, message, Toasty.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    public void onVolleyErrorResponse(VolleyError error) {
+        productsAPI.hideDialogue();
+        if (error instanceof NetworkError){
+            Toasty.error(this, "Check your connection and try again", Toasty.LENGTH_LONG).show();
+        }
+        else Toasty.error(this, error.toString(), Toasty.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onJSONObjectException(JSONException e) {
+        productsAPI.hideDialogue();
+        e.printStackTrace();
+        Log.e("JSONException", e.toString());
+    }
 }
