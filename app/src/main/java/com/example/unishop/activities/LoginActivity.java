@@ -23,14 +23,17 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import consultant.DasboardActivity;
 import es.dmoral.toasty.Toasty;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener,
         AccountListiner {
-    EditText emailET,passwordET;
-    TextView forgetPasswordTV;
-    private Button loginBtn;
+    @BindView(R.id.emailET) EditText emailET;
+    @BindView(R.id.passwordET) EditText passwordET;
+    @BindView(R.id.forgetPasswordTV) TextView forgetPasswordTV;
+    @BindView(R.id.loginBtn) Button loginBtn;
 
     private AccountAPI accountAPI;
 
@@ -38,16 +41,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        ButterKnife.bind(this);
 
         checkUser();
-
-        emailET = findViewById(R.id.emailET);
-        passwordET = findViewById(R.id.passwordET);
-        forgetPasswordTV = findViewById(R.id.forgetPasswordTV);
-        loginBtn = findViewById(R.id.loginBtn);
         loginBtn.setOnClickListener(this);
-
-
         accountAPI = new AccountAPI(this);
         accountAPI.setAccountListiner(this);
 
