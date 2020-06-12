@@ -29,9 +29,12 @@
     <string name="LOGIN_URL">https://histogenetic-exhaus.000webhostapp.com/unishop/authenticate.php</string>
     <string name="REGISTER_URL">https://histogenetic-exhaus.000webhostapp.com/unishop/create_user.php</string>
     <string name="CONSULTANT_URL">https://histogenetic-exhaus.000webhostapp.com/unishop/list_consultants.php</string>
+    <string name="PRODUCTS_URL">https://histogenetic-exhaus.000webhostapp.com/unishop/list_products.php</string>
     <string name="USER_PROFILE_URL">https://histogenetic-exhaus.000webhostapp.com/unishop/user_profile.php</string>
     <string name="UPDATE_PHONE_URL">https://histogenetic-exhaus.000webhostapp.com/unishop/update_user_phone.php</string>
     <string name="ADD_ITEM_URL">https://histogenetic-exhaus.000webhostapp.com/unishop/add_item.php</string>
+    <string name="UPDATE_PRICE_URL">https://histogenetic-exhaus.000webhostapp.com/unishop/update_price.php</string>
+    <string name="UPDATE_QUANTITY_URL">https://histogenetic-exhaus.000webhostapp.com/unishop/update_quantity.php</string>
 
 
     <!--    Categories-->
@@ -45,4 +48,9 @@
     <string name="Computing">Computing</string>
     <string name="Appliance">Appliance</string>
     <string name="Home_and_office">Home &amp; Office</string>
+
+
+    <string name="name_and_description">Refurbished Elitebook Folio 9480m - 14" - Intel Core I7 - 8GB RAM - 500GB HDD - Silver</string>
+    <string name="ksh_30_000">KSH 30,000</string>
+    <string name="category_computing">Category: Computing</string>
 </resources>

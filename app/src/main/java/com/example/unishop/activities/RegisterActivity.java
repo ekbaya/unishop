@@ -17,6 +17,7 @@ import com.android.volley.VolleyError;
 import com.example.unishop.R;
 import com.example.unishop.api.AccountAPI;
 import com.example.unishop.services.AccountListener;
+import com.example.unishop.utilities.Loader;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -42,6 +43,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
     private String user_role;
     private AccountAPI accountAPI;
+    private Loader loader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +58,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
         accountAPI = new AccountAPI(this);
         accountAPI.setAccountListener(this);
+        loader = new Loader(this);
 
     }
 
@@ -83,7 +86,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
            String password = passwordEt.getText().toString();
 
            if (validate()){
-               accountAPI.showDialogue();
+               loader.showDialogue();
                accountAPI.registerNewUser(first_name,last_name,u_email,u_phone,u_id_number,password,user_role);
            }
        }
@@ -126,7 +129,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public void onSuccessResponse(JSONObject object) throws JSONException {
-        accountAPI.hideDialogue();
+        loader.hideDialogue();
         boolean success = object.getBoolean("success");
         String message = object.getString("message");
 
@@ -141,7 +144,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public void onVolleyErrorResponse(VolleyError error) {
-        accountAPI.hideDialogue();
+        loader.hideDialogue();
         if (error instanceof NetworkError){
             Toasty.error(this, "Check your connection and try again", Toasty.LENGTH_LONG).show();
         }
@@ -150,7 +153,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public void onJSONObjectException(JSONException e) {
-        accountAPI.hideDialogue();
+        loader.hideDialogue();
         Toasty.error(this, e.toString(), Toasty.LENGTH_LONG).show();
     }
 

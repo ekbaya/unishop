@@ -13,14 +13,13 @@ import com.android.volley.NetworkError;
 import com.android.volley.VolleyError;
 import com.example.unishop.R;
 import com.example.unishop.api.ConsultantsAPI;
-import com.example.unishop.data.adapters.ConsultantAdapter;
-import com.example.unishop.data.models.ModelConsultant;
+import com.example.unishop.adapters.ConsultantAdapter;
+import com.example.unishop.models.ModelConsultant;
 import com.example.unishop.services.ConsultantsListener;
 import com.example.unishop.utilities.NetworkConnection;
 
 import org.json.JSONException;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -28,7 +27,6 @@ import butterknife.ButterKnife;
 import es.dmoral.toasty.Toasty;
 
 public class ConsultantsActivity extends AppCompatActivity implements ConsultantsListener {
-    private ArrayList<ModelConsultant> consultantArrayList;
     @BindView(R.id.consultants_recyclerview) RecyclerView consultants_recyclerview;
     @BindView(R.id.consultant_dialog) ProgressBar consultant_dialog;
     private ConsultantAdapter consultantAdapter;
@@ -43,7 +41,6 @@ public class ConsultantsActivity extends AppCompatActivity implements Consultant
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         ButterKnife.bind(this);
 
-        consultantArrayList = new ArrayList<>();
         //setting its properties
         consultants_recyclerview.setHasFixedSize(true);
         consultants_recyclerview.setLayoutManager(new LinearLayoutManager(this));
@@ -76,7 +73,7 @@ public class ConsultantsActivity extends AppCompatActivity implements Consultant
     }
 
     @Override
-    public void onSuccessResponse(List<ModelConsultant> consultantArrayList) {
+    public void onConsultantsReceived(List<ModelConsultant> consultantArrayList) {
         //initialise adapter
         consultantAdapter = new ConsultantAdapter(ConsultantsActivity.this, consultantArrayList);
         //set adapter to recyclerView

@@ -28,7 +28,7 @@
             android:text="Change Price"
             android:textColor="@color/colorDark"
             android:textSize="22sp"/>
-        <view
+        <View
             android:layout_width="match_parent"
             android:layout_height="2dp"
             android:background="@color/colorDark"
@@ -115,7 +115,7 @@
             android:text="Add to stoke"
             android:textColor="@color/colorDark"
             android:textSize="22sp"/>
-        <view
+        <View
             android:layout_width="match_parent"
             android:layout_height="2dp"
             android:background="@color/colorDark"

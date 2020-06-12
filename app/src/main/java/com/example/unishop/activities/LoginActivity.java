@@ -17,8 +17,9 @@ import com.android.volley.NetworkError;
 import com.android.volley.VolleyError;
 import com.example.unishop.R;
 import com.example.unishop.api.AccountAPI;
-import com.example.unishop.data.SharedHelper;
+import com.example.unishop.utilities.SharedHelper;
 import com.example.unishop.services.AccountListener;
+import com.example.unishop.utilities.Loader;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -37,6 +38,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @BindView(R.id.loginBtn) Button loginBtn;
 
     private AccountAPI accountAPI;
+    private Loader loader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +50,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         loginBtn.setOnClickListener(this);
         accountAPI = new AccountAPI(this);
         accountAPI.setAccountListener(this);
+
+        loader = new Loader(this);
 
     }
 
@@ -81,7 +85,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
            if (validate()){
                accountAPI.loginUser(email, password);
-               accountAPI.showDialogue();
+               loader.showDialogue();
            }
        }
     }
@@ -115,7 +119,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         JSONArray data = object.getJSONArray("data");
 
         if (success){
-            accountAPI.hideDialogue();
+            loader.hideDialogue();
             Toast.makeText(LoginActivity.this, "Login successfully...", Toast.LENGTH_SHORT).show();
             JSONObject dataJSONObject = data.getJSONObject(0);
             String user_id = dataJSONObject.getString("user_id");
@@ -150,14 +154,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         }
         else {
-            accountAPI.hideDialogue();
+            loader.hideDialogue();
             Toasty.error(this, message, Toasty.LENGTH_LONG).show();
         }
     }
 
     @Override
     public void onVolleyErrorResponse(VolleyError error) {
-        accountAPI.hideDialogue();
+        loader.hideDialogue();
         if (error instanceof NetworkError){
             Toasty.error(this, "Check your connection and try again", Toasty.LENGTH_LONG).show();
         }
@@ -166,7 +170,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void onJSONObjectException(JSONException e) {
-        accountAPI.hideDialogue();
+        loader.hideDialogue();
         Toasty.error(this, e.toString(), Toasty.LENGTH_LONG).show();
     }
 }

@@ -6,8 +6,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public interface ConsultantListener {
-    void onSuccessResponse(JSONObject object) throws JSONException;
+    void onConsultantReceived(JSONObject object) throws JSONException;
     void onVolleyErrorResponse(VolleyError error);
     void onJSONObjectException(JSONException e);
-    void onGetConsultantNames(String firstname, String lastname);
+    void onUserReceived(String firstname, String lastname);
 }

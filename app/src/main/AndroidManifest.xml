@@ -14,7 +14,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.UpdateItemsActivity"></activity>
+        <activity android:name=".activities.ProductsActivity"></activity>
+        <activity android:name=".activities.UpdateItemsActivity" />
         <activity android:name=".activities.PermissionsActivity" />
         <activity
             android:name=".activities.AddProductActivity2"

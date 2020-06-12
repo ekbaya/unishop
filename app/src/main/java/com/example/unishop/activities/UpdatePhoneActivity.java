@@ -16,6 +16,7 @@ import com.android.volley.VolleyError;
 import com.example.unishop.R;
 import com.example.unishop.api.ConsultantsAPI;
 import com.example.unishop.services.UpdatePhoneListener;
+import com.example.unishop.utilities.Loader;
 import com.example.unishop.utilities.NetworkConnection;
 
 import org.json.JSONException;
@@ -31,6 +32,7 @@ public class UpdatePhoneActivity extends AppCompatActivity implements View.OnCli
     @BindView(R.id.updateBtn) Button updateBtn;
 
     private ConsultantsAPI consultantsAPI;
+    private Loader loader;
 
 
     @Override
@@ -45,6 +47,7 @@ public class UpdatePhoneActivity extends AppCompatActivity implements View.OnCli
 
         consultantsAPI = new ConsultantsAPI(this);
         consultantsAPI.setUpdatePhoneListener(this);
+        loader = new Loader(this);
     }
 
     private boolean validate() {
@@ -90,7 +93,7 @@ public class UpdatePhoneActivity extends AppCompatActivity implements View.OnCli
 
                if (connection.isConnected()){
                    consultantsAPI.updatePhone(email, phone);
-                   consultantsAPI.showDialogue();
+                   loader.showDialogue();
                }
                else {
                    Toast.makeText(UpdatePhoneActivity.this, getText(R.string.network_text), Toast.LENGTH_SHORT).show();
@@ -100,8 +103,8 @@ public class UpdatePhoneActivity extends AppCompatActivity implements View.OnCli
     }
 
     @Override
-    public void onSuccessResponse(JSONObject object) throws JSONException {
-        consultantsAPI.hideDialogue();
+    public void onPhoneUpdated(JSONObject object) throws JSONException {
+        loader.hideDialogue();
         boolean success = object.getBoolean("success");
         String message = object.getString("message");
 
@@ -118,7 +121,7 @@ public class UpdatePhoneActivity extends AppCompatActivity implements View.OnCli
 
     @Override
     public void onVolleyErrorResponse(VolleyError error) {
-        consultantsAPI.hideDialogue();
+        loader.hideDialogue();
         if (error instanceof NetworkError){
             Toasty.error(this, "Check your connection and try again", Toasty.LENGTH_LONG).show();
         }
@@ -127,7 +130,7 @@ public class UpdatePhoneActivity extends AppCompatActivity implements View.OnCli
 
     @Override
     public void onJSONObjectException(JSONException e) {
-        consultantsAPI.hideDialogue();
+        loader.hideDialogue();
         Toasty.error(this, e.toString(), Toasty.LENGTH_LONG).show();
     }
 }

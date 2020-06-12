@@ -1,6 +1,5 @@
 package com.example.unishop.api;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.util.Log;
 
@@ -12,7 +11,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.unishop.R;
-import com.example.unishop.data.SharedHelper;
+import com.example.unishop.utilities.SharedHelper;
 import com.example.unishop.services.AccountListener;
 
 import org.json.JSONException;
@@ -24,11 +23,9 @@ import java.util.Map;
 public class AccountAPI {
     private AccountListener accountListener;
     private Context context;
-    private ProgressDialog loading;
 
     public AccountAPI(Context context) {
         this.context = context;
-        loading = new ProgressDialog(context);
     }
 
     public void loginUser(final String email, final String password){
@@ -72,7 +69,6 @@ public class AccountAPI {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        loading.dismiss();
                         Log.i("tagconvertstr", "["+response+"]");
                         try {
                             JSONObject jsonObject = new JSONObject(response);
@@ -106,16 +102,6 @@ public class AccountAPI {
         RequestQueue requestQueue = Volley.newRequestQueue(context);
         requestQueue.add(stringRequest);
     }
-
-    public void showDialogue(){
-       loading.setMessage("Wait a moment...");
-       loading.show();
-    }
-
-    public void hideDialogue(){
-        loading.dismiss();
-    }
-
     public AccountListener getAccountListener() {
         return accountListener;
     }

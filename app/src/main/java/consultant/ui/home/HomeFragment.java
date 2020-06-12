@@ -19,7 +19,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.unishop.activities.LoginActivity;
 import com.example.unishop.R;
-import com.example.unishop.data.SharedHelper;
+import com.example.unishop.utilities.SharedHelper;
 
 public class HomeFragment extends Fragment {
 

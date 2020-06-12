@@ -83,7 +83,7 @@ public class ConsultantDetailsActivity extends AppCompatActivity implements Cons
     }
 
     @Override
-    public void onSuccessResponse(JSONObject object) throws JSONException {
+    public void onConsultantReceived(JSONObject object) throws JSONException {
         boolean success = object.getBoolean("success");
         String message = object.getString("message");
         JSONArray data = object.getJSONArray("data");
@@ -93,7 +93,7 @@ public class ConsultantDetailsActivity extends AppCompatActivity implements Cons
             String firstname = jsonObject.getString("firstname");
             String lastname = jsonObject.getString("lastname");
 
-            onGetConsultantNames(firstname, lastname);
+            onUserReceived(firstname, lastname);
         }
 
     }
@@ -115,7 +115,7 @@ public class ConsultantDetailsActivity extends AppCompatActivity implements Cons
     }
 
     @Override
-    public void onGetConsultantNames(String firstname, String lastname) {
+    public void onUserReceived(String firstname, String lastname) {
         referred_byTv.setText(firstname+" "+lastname);
         progressBar.setVisibility(View.GONE);
         referred_byTv.setVisibility(View.VISIBLE);

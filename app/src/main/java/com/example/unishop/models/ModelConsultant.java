@@ -1,4 +1,4 @@
-package com.example.unishop.data.models;
+package com.example.unishop.models;
 
 public class ModelConsultant {
     private String user_id;

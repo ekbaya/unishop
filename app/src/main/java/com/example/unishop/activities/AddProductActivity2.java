@@ -3,7 +3,6 @@ package com.example.unishop.activities;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -27,26 +26,21 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkError;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.example.unishop.R;
 import com.example.unishop.api.ProductsAPI;
-import com.example.unishop.data.SharedHelper;
+import com.example.unishop.utilities.SharedHelper;
+import com.example.unishop.models.ModelProduct;
 import com.example.unishop.services.ProductsListener;
+import com.example.unishop.utilities.Loader;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -75,6 +69,7 @@ public class AddProductActivity2 extends AppCompatActivity implements View.OnCli
     String string_image;
 
     private ProductsAPI productsAPI;
+    private Loader loader;
 
 
     @Override
@@ -95,6 +90,8 @@ public class AddProductActivity2 extends AppCompatActivity implements View.OnCli
 
         productsAPI = new ProductsAPI(this);
         productsAPI.setProductsListener(this);
+
+        loader = new Loader(this);
     }
 
     private void pickImage() {
@@ -344,14 +341,14 @@ public class AddProductActivity2 extends AppCompatActivity implements View.OnCli
         if (v==submit){
             if (validate()){
                 productsAPI.addItem();
-                productsAPI.showDialogue();
+                loader.showDialogue();
             }
         }
     }
 
     @Override
-    public void onSuccessResponse(JSONObject object) throws JSONException {
-        productsAPI.hideDialogue();
+    public void onItemAdded(JSONObject object) throws JSONException {
+        loader.hideDialogue();
         boolean success = object.getBoolean("success");
         String message = object.getString("message");
 
@@ -367,7 +364,7 @@ public class AddProductActivity2 extends AppCompatActivity implements View.OnCli
 
     @Override
     public void onVolleyErrorResponse(VolleyError error) {
-        productsAPI.hideDialogue();
+        loader.hideDialogue();
         if (error instanceof NetworkError){
             Toasty.error(this, "Check your connection and try again", Toasty.LENGTH_LONG).show();
         }
@@ -376,8 +373,13 @@ public class AddProductActivity2 extends AppCompatActivity implements View.OnCli
 
     @Override
     public void onJSONObjectException(JSONException e) {
-        productsAPI.hideDialogue();
+        loader.hideDialogue();
         e.printStackTrace();
         Log.e("JSONException", e.toString());
+    }
+
+    @Override
+    public void onProductsReceived(List<ModelProduct> productList) {
+
     }
 }

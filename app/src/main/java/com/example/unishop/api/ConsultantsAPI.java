@@ -1,6 +1,5 @@
 package com.example.unishop.api;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.util.Log;
 
@@ -13,7 +12,7 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.unishop.R;
-import com.example.unishop.data.models.ModelConsultant;
+import com.example.unishop.models.ModelConsultant;
 import com.example.unishop.services.ConsultantListener;
 import com.example.unishop.services.ConsultantsListener;
 import com.example.unishop.services.UpdatePhoneListener;
@@ -30,7 +29,6 @@ import java.util.Map;
 public class ConsultantsAPI {
     private List<ModelConsultant> consultantArrayList;
     private Context context;
-    private ProgressDialog loading;
     private ConsultantsListener consultantsListener;
     private ConsultantListener consultantListener;
     private UpdatePhoneListener updatePhoneListener;
@@ -38,7 +36,6 @@ public class ConsultantsAPI {
     public ConsultantsAPI(Context context) {
         this.context = context;
         consultantArrayList = new ArrayList<>();
-        loading = new ProgressDialog(context);
     }
 
     public void getAllConsultants() {
@@ -70,7 +67,7 @@ public class ConsultantsAPI {
                             }
                         }
 
-                        consultantsListener.onSuccessResponse(consultantArrayList);
+                        consultantsListener.onConsultantsReceived(consultantArrayList);
 
                     }
                 }, new Response.ErrorListener() {
@@ -93,7 +90,7 @@ public class ConsultantsAPI {
 
                         try {
                             JSONObject jsonObject = new JSONObject(response);
-                            consultantListener.onSuccessResponse(jsonObject);
+                            consultantListener.onConsultantReceived(jsonObject);
                         } catch (JSONException e) {
                             e.printStackTrace();
                             Log.e("JSONException", e.toString());
@@ -127,11 +124,10 @@ public class ConsultantsAPI {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        loading.dismiss();
                         Log.i("onResponse", "["+response+"]");
                         try {
                             JSONObject jsonObject = new JSONObject(response);
-                            updatePhoneListener.onSuccessResponse(jsonObject);
+                            updatePhoneListener.onPhoneUpdated(jsonObject);
                         } catch (JSONException e) {
                             updatePhoneListener.onJSONObjectException(e);
                         }
@@ -157,17 +153,6 @@ public class ConsultantsAPI {
         requestQueue.add(stringRequest);
 
 
-    }
-
-
-
-    public void showDialogue(){
-        loading.setMessage("Wait a moment...");
-        loading.show();
-    }
-
-    public void hideDialogue(){
-        loading.dismiss();
     }
 
     public ConsultantsListener getConsultantsListener() {

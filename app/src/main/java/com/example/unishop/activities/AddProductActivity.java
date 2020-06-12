@@ -8,12 +8,10 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.Toast;
 
 import com.example.unishop.R;
-import com.example.unishop.data.SharedHelper;
+import com.example.unishop.utilities.SharedHelper;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
