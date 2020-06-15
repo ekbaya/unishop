@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
-import com.example.unishop.activities.AddProductActivity;
+import com.example.unishop.activities.CategoriesActivity;
 import com.example.unishop.R;
 import com.example.unishop.activities.ProductsActivity;
 import com.example.unishop.activities.RemoveItemActivity;
@@ -41,7 +41,7 @@ public class ItemsManagementFragment extends Fragment implements View.OnClickLis
     @Override
     public void onClick(View v) {
        if (v.equals(addItemCard)){
-           startActivity(new Intent(new Intent(getActivity(), AddProductActivity.class)));
+           startActivity(new Intent(new Intent(getActivity(), CategoriesActivity.class)));
        }
        if (v.equals(updateItemsCard)){
            startActivity(new Intent(new Intent(getActivity(), UpdateItemsActivity.class)));

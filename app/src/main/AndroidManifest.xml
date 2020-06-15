@@ -19,10 +19,10 @@
         <activity android:name=".activities.UpdateItemsActivity" />
         <activity android:name=".activities.PermissionsActivity" />
         <activity
-            android:name=".activities.AddProductActivity2"
+            android:name=".activities.AddProductActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.AddProductActivity"
+            android:name=".activities.CategoriesActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.UpdatePhoneActivity"

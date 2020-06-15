@@ -11,11 +11,10 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.unishop.R;
-import com.example.unishop.utilities.Server;
-import com.example.unishop.utilities.SharedHelper;
 import com.example.unishop.models.ModelProduct;
 import com.example.unishop.services.ProductsListener;
+import com.example.unishop.utilities.Server;
+import com.example.unishop.utilities.SharedHelper;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -58,12 +57,12 @@ public class ProductsAPI {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
-                params.put("p_name", SharedHelper.getKey(context, "p_name"));
-                params.put("p_category", SharedHelper.getKey(context, "category"));
+                params.put("name", SharedHelper.getKey(context, "p_name"));
+                params.put("category_id", SharedHelper.getKey(context, "category_id"));
                 params.put("price", SharedHelper.getKey(context, "price"));
                 params.put("quantity", SharedHelper.getKey(context, "quantity"));
-                params.put("p_description", SharedHelper.getKey(context, "description"));
-                params.put("image", SharedHelper.getKey(context, "image"));
+                params.put("description", SharedHelper.getKey(context, "description"));
+                params.put("image_url", SharedHelper.getKey(context, "image_url"));
                 return params;
             }
         };

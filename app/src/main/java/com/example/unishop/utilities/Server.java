@@ -16,4 +16,5 @@ public class Server {
     public String UPDATE_PRICE_URL = BASE_URL +"unishop/update_price.php";
     public String UPDATE_QUANTITY_URL = BASE_URL +"unishop/update_quantity.php";
     public String DELETE_PRODUCT_URL = BASE_URL +"unishop/delete_product.php";
+    public String CATEGORIES_URL = BASE_URL +"unishop/categories.php";
 }
