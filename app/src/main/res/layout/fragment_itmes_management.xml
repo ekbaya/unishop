@@ -131,7 +131,7 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
         <androidx.cardview.widget.CardView
-            android:id="@+id/withdrawCard"
+            android:id="@+id/removeItemCard"
             android:layout_below="@id/addItemCard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -182,7 +182,7 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
         <androidx.cardview.widget.CardView
-            android:layout_below="@id/withdrawCard"
+            android:layout_below="@id/removeItemCard"
             android:id="@+id/updateItemsCard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -16,6 +16,7 @@ import com.example.unishop.models.ModelConsultant;
 import com.example.unishop.services.ConsultantListener;
 import com.example.unishop.services.ConsultantsListener;
 import com.example.unishop.services.UpdatePhoneListener;
+import com.example.unishop.utilities.Server;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -39,7 +40,7 @@ public class ConsultantsAPI {
     }
 
     public void getAllConsultants() {
-        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, context.getString(R.string.CONSULTANT_URL),
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, Server.get().CONSULTANT_URL,
                 null,
                 new Response.Listener<JSONArray>() {
                     @Override
@@ -82,7 +83,7 @@ public class ConsultantsAPI {
     }
 
     public void getUserProfile(final String user_id) {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, context.getString(R.string.USER_PROFILE_URL),
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, Server.get().USER_PROFILE_URL,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -120,7 +121,7 @@ public class ConsultantsAPI {
     }
 
     public void updatePhone(final String email, final String phone) {
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, context.getString(R.string.UPDATE_PHONE_URL),
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, Server.get().UPDATE_PHONE_URL,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {

@@ -97,6 +97,11 @@ public class UpdateItemsActivity extends AppCompatActivity implements ProductsLi
     }
 
     @Override
+    public void onProductDeleted(JSONObject object) throws JSONException {
+
+    }
+
+    @Override
     public void onVolleyErrorResponse(VolleyError error) {
         loader.hideDialogue();
         if (error instanceof NetworkError){

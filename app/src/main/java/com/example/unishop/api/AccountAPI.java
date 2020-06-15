@@ -11,6 +11,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.unishop.R;
+import com.example.unishop.utilities.Server;
 import com.example.unishop.utilities.SharedHelper;
 import com.example.unishop.services.AccountListener;
 
@@ -29,7 +30,7 @@ public class AccountAPI {
     }
 
     public void loginUser(final String email, final String password){
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, context.getString(R.string.LOGIN_URL),
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, Server.get().LOGIN_URL,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -65,7 +66,7 @@ public class AccountAPI {
     public void registerNewUser(final String first_name, final String last_name, final String u_email,
                                  final String u_phone, final String u_id_number, final String password, final String user_role){
 
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, context.getString(R.string.REGISTER_URL),
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, Server.get().REGISTER_URL,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {

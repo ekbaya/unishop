@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import com.example.unishop.activities.AddProductActivity;
 import com.example.unishop.R;
 import com.example.unishop.activities.ProductsActivity;
+import com.example.unishop.activities.RemoveItemActivity;
 import com.example.unishop.activities.UpdateItemsActivity;
 
 import butterknife.BindView;
@@ -23,6 +24,7 @@ public class ItemsManagementFragment extends Fragment implements View.OnClickLis
     @BindView(R.id.addItemCard) CardView addItemCard;
     @BindView(R.id.updateItemsCard) CardView updateItemsCard;
     @BindView(R.id.viewItemsCard) CardView viewItemsCard;
+    @BindView(R.id.removeItemCard) CardView removeItemCard;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -31,6 +33,7 @@ public class ItemsManagementFragment extends Fragment implements View.OnClickLis
         addItemCard.setOnClickListener(this);
         updateItemsCard.setOnClickListener(this);
         viewItemsCard.setOnClickListener(this);
+        removeItemCard.setOnClickListener(this);
 
         return view;
     }
@@ -46,5 +49,8 @@ public class ItemsManagementFragment extends Fragment implements View.OnClickLis
        if (v.equals(viewItemsCard)){
            startActivity(new Intent(new Intent(getActivity(), ProductsActivity.class)));
        }
+        if (v.equals(removeItemCard)){
+            startActivity(new Intent(new Intent(getActivity(), RemoveItemActivity.class)));
+        }
     }
 }

@@ -12,6 +12,7 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.unishop.R;
+import com.example.unishop.utilities.Server;
 import com.example.unishop.utilities.SharedHelper;
 import com.example.unishop.models.ModelProduct;
 import com.example.unishop.services.ProductsListener;
@@ -29,7 +30,7 @@ public class ProductsAPI {
    private Context context;
    private ProductsListener productsListener;
    private ProductsListener.UpdateListener updateListener;
-    List<ModelProduct> productList;
+   List<ModelProduct> productList;
 
     public ProductsAPI(Context context) {
         this.context = context;
@@ -37,7 +38,7 @@ public class ProductsAPI {
     }
 
     public void addItem(){
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, context.getString(R.string.ADD_ITEM_URL), new Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, Server.get().ADD_ITEM_URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
@@ -73,7 +74,7 @@ public class ProductsAPI {
     }
 
     public void updatePrice(String id, String price){
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, context.getString(R.string.UPDATE_PRICE_URL), new Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, Server.get().UPDATE_PRICE_URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
@@ -105,7 +106,7 @@ public class ProductsAPI {
     }
 
     public void updateQuantity(String id, String quantity){
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, context.getString(R.string.UPDATE_QUANTITY_URL), new Response.Listener<String>() {
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, Server.get().UPDATE_QUANTITY_URL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
@@ -137,7 +138,7 @@ public class ProductsAPI {
     }
 
     public void  getAllProducts(){
-        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, context.getString(R.string.PRODUCTS_URL),
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, Server.get().PRODUCTS_URL,
                 null,
                 new Response.Listener<JSONArray>() {
                     @Override
@@ -176,6 +177,36 @@ public class ProductsAPI {
 
         RequestQueue requestQueue = Volley.newRequestQueue(context);
         requestQueue.add(jsonArrayRequest);
+    }
+
+    public void deleteProduct(String id){
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, new Server().DELETE_PRODUCT_URL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    JSONObject jsonObject = new JSONObject(response);
+                    updateListener.onProductDeleted(jsonObject);
+                } catch (JSONException e) {
+                    updateListener.onJSONObjectException(e);
+                }
+
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                updateListener.onVolleyErrorResponse(error);
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("id",id);
+                return params;
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+        requestQueue.add(stringRequest);
     }
 
     public ProductsListener getProductsListener() {
