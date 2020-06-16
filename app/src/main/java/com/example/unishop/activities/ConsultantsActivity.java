@@ -12,11 +12,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.android.volley.NetworkError;
 import com.android.volley.VolleyError;
 import com.example.unishop.R;
-import com.example.unishop.api.ConsultantsAPI;
 import com.example.unishop.adapters.ConsultantAdapter;
+import com.example.unishop.api.ConsultantsAPI;
 import com.example.unishop.models.ModelConsultant;
 import com.example.unishop.services.ConsultantsListener;
-import com.example.unishop.utilities.Loader;
 import com.example.unishop.utilities.NetworkConnection;
 
 import org.json.JSONException;
@@ -33,7 +32,6 @@ public class ConsultantsActivity extends AppCompatActivity implements Consultant
     private ConsultantAdapter consultantAdapter;
 
     private ConsultantsAPI consultantsAPI;
-    private Loader loader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +47,6 @@ public class ConsultantsActivity extends AppCompatActivity implements Consultant
 
         consultantsAPI = new ConsultantsAPI(this);
         consultantsAPI.setConsultantsListener(this);
-        loader = new Loader(this);
         loadConsultants();
     }
 
@@ -57,7 +54,6 @@ public class ConsultantsActivity extends AppCompatActivity implements Consultant
         if (new NetworkConnection().get().isConnected(this)){
             // get all consultants
             consultantsAPI.getAllConsultants();
-            loader.showDialogue();
 
         }else {
             Toasty.warning(this, getText(R.string.network_text), Toasty.LENGTH_LONG).show();
@@ -79,7 +75,6 @@ public class ConsultantsActivity extends AppCompatActivity implements Consultant
 
     @Override
     public void onConsultantsReceived(List<ModelConsultant> consultantArrayList) {
-        loader.hideDialogue();
         //initialise adapter
         consultantAdapter = new ConsultantAdapter(ConsultantsActivity.this, consultantArrayList);
         //set adapter to recyclerView
@@ -90,7 +85,6 @@ public class ConsultantsActivity extends AppCompatActivity implements Consultant
 
     @Override
     public void onVolleyErrorResponse(VolleyError error) {
-        loader.hideDialogue();
         if (error instanceof NetworkError){
             Toasty.error(this, "Check your connection and try again", Toasty.LENGTH_LONG).show();
         }
@@ -99,7 +93,6 @@ public class ConsultantsActivity extends AppCompatActivity implements Consultant
 
     @Override
     public void onJSONObjectException(JSONException e) {
-        loader.hideDialogue();
         Toasty.error(this, e.toString(), Toasty.LENGTH_LONG).show();
     }
 }
