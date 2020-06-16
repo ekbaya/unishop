@@ -31,6 +31,7 @@ import com.example.unishop.api.ProductsAPI;
 import com.example.unishop.models.ModelProduct;
 import com.example.unishop.services.ProductsListener;
 import com.example.unishop.utilities.Loader;
+import com.example.unishop.utilities.NetworkConnection;
 import com.example.unishop.utilities.SharedHelper;
 
 import org.json.JSONException;
@@ -56,11 +57,8 @@ public class HomeFragment extends Fragment implements ProductsListener {
 
         productsAPI = new ProductsAPI(getActivity());
         productsAPI.setProductsListener(this);
-        productsAPI.getAllProducts();
-
         loader = new Loader(getActivity());
-        loader.showDialogue();
-
+        loadProducts();
         return view;
     }
 
@@ -97,7 +95,7 @@ public class HomeFragment extends Fragment implements ProductsListener {
                     searchProducts(s);
                 }
                 else {
-                    loadPost();
+                    loadProducts();
                 }
                 return false;
             }
@@ -109,7 +107,7 @@ public class HomeFragment extends Fragment implements ProductsListener {
                     searchProducts(s);
                 }
                 else {
-                    loadPost();
+                    loadProducts();
                 }
                 return false;
             }
@@ -118,8 +116,14 @@ public class HomeFragment extends Fragment implements ProductsListener {
         super.onCreateOptionsMenu(menu, inflater);
     }
 
-    private void loadPost() {
-        productsAPI.getAllProducts();
+    private void loadProducts() {
+        if (new NetworkConnection().get().isConnected(Objects.requireNonNull(getActivity()))){
+            productsAPI.getAllProducts();
+            loader.showDialogue();
+
+        }else {
+            Toasty.warning(getActivity(), getText(R.string.network_text), Toasty.LENGTH_LONG).show();
+        }
     }
 
     private void searchProducts(String s) {

@@ -23,12 +23,14 @@ import com.example.unishop.api.ProductsAPI;
 import com.example.unishop.models.ModelProduct;
 import com.example.unishop.services.ProductsListener;
 import com.example.unishop.utilities.Loader;
+import com.example.unishop.utilities.NetworkConnection;
 import com.example.unishop.utilities.SharedHelper;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -51,10 +53,8 @@ public class ProductsActivity extends AppCompatActivity implements ProductsListe
 
         productsAPI = new ProductsAPI(this);
         productsAPI.setProductsListener(this);
-        productsAPI.getAllProducts();
-
         loader = new Loader(this);
-        loader.showDialogue();
+        loadProducts();
     }
 
     @Override
@@ -116,7 +116,7 @@ public class ProductsActivity extends AppCompatActivity implements ProductsListe
                     searchProducts(s);
                 }
                 else {
-                    loadPost();
+                    loadProducts();
                 }
                 return false;
             }
@@ -128,7 +128,7 @@ public class ProductsActivity extends AppCompatActivity implements ProductsListe
                     searchProducts(s);
                 }
                 else {
-                    loadPost();
+                    loadProducts();
                 }
                 return false;
             }
@@ -136,8 +136,14 @@ public class ProductsActivity extends AppCompatActivity implements ProductsListe
         return true;
     }
 
-    private void loadPost() {
-        productsAPI.getAllProducts();
+    private void loadProducts() {
+        if (new NetworkConnection().get().isConnected(this)){
+            productsAPI.getAllProducts();
+            loader.showDialogue();
+
+        }else {
+            Toasty.warning(this, getText(R.string.network_text), Toasty.LENGTH_LONG).show();
+        }
     }
 
     private void searchProducts(String s) {

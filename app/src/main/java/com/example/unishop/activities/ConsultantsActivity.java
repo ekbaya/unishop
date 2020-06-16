@@ -45,12 +45,10 @@ public class ConsultantsActivity extends AppCompatActivity implements Consultant
         consultants_recyclerview.setHasFixedSize(true);
         consultants_recyclerview.setLayoutManager(new LinearLayoutManager(this));
 
-        NetworkConnection connection = new NetworkConnection(this);
-
         consultantsAPI = new ConsultantsAPI(this);
         consultantsAPI.setConsultantsListener(this);
 
-        if (connection.isConnected()){
+        if (new NetworkConnection().get().isConnected(this)){
             // get all consultants
             consultantsAPI.getAllConsultants();
 

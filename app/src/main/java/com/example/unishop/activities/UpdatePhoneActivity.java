@@ -89,9 +89,8 @@ public class UpdatePhoneActivity extends AppCompatActivity implements View.OnCli
            if (validate()){
                String email = emailEt.getText().toString();
                String phone = phoneEt.getText().toString();
-               final NetworkConnection connection = new NetworkConnection(this);
 
-               if (connection.isConnected()){
+               if (new NetworkConnection().get().isConnected(this)){
                    consultantsAPI.updatePhone(email, phone);
                    loader.showDialogue();
                }

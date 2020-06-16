@@ -1,5 +1,6 @@
 package com.example.unishop.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,6 +16,7 @@ import com.example.unishop.R;
 import com.example.unishop.api.ConsultantsAPI;
 import com.example.unishop.services.ConsultantListener;
 import com.example.unishop.utilities.NetworkConnection;
+import com.example.unishop.utilities.Server;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -44,18 +46,17 @@ public class ConsultantDetailsActivity extends AppCompatActivity implements Cons
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         ButterKnife.bind(this);
 
-
-        NetworkConnection networkConnection = new NetworkConnection(this);
         intent = getIntent();
 
         consultantsAPI = new ConsultantsAPI(this);
         consultantsAPI.setConsultantListener(this);
 
+
         //set data to views
         setDataToViews();
         String user_id = intent.getStringExtra("created_by");
 
-        if (networkConnection.isConnected()){
+        if (new NetworkConnection().get().isConnected(this)){
             consultantsAPI.getUserProfile(user_id);
         }else Toasty.warning(this, getText(R.string.network_text), Toasty.LENGTH_LONG).show();
     }
