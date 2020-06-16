@@ -2,37 +2,36 @@ package com.example.unishop.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
+import com.android.volley.NetworkError;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.Volley;
 import com.example.unishop.R;
-import com.example.unishop.data.adapters.ConsultantAdapter;
-import com.example.unishop.data.models.ModelConsultant;
+import com.example.unishop.api.ConsultantsAPI;
+import com.example.unishop.adapters.ConsultantAdapter;
+import com.example.unishop.models.ModelConsultant;
+import com.example.unishop.services.ConsultantsListener;
 import com.example.unishop.utilities.NetworkConnection;
 
-import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.util.ArrayList;
+import java.util.List;
 
-public class ConsultantsActivity extends AppCompatActivity {
-    private ArrayList<ModelConsultant> consultantArrayList;
-    private RecyclerView consultants_recyclerview;
-    private ProgressBar consultant_dialog;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import es.dmoral.toasty.Toasty;
+
+public class ConsultantsActivity extends AppCompatActivity implements ConsultantsListener {
+    @BindView(R.id.consultants_recyclerview) RecyclerView consultants_recyclerview;
+    @BindView(R.id.consultant_dialog) ProgressBar consultant_dialog;
     private ConsultantAdapter consultantAdapter;
+
+    private ConsultantsAPI consultantsAPI;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,71 +39,24 @@ public class ConsultantsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_consultants);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+        ButterKnife.bind(this);
 
-        consultantArrayList = new ArrayList<>();
-        consultant_dialog = findViewById(R.id.consultant_dialog);
-        //init recyclerview
-        consultants_recyclerview = findViewById(R.id.consultants_recyclerview);
         //setting its properties
         consultants_recyclerview.setHasFixedSize(true);
         consultants_recyclerview.setLayoutManager(new LinearLayoutManager(this));
 
         NetworkConnection connection = new NetworkConnection(this);
 
+        consultantsAPI = new ConsultantsAPI(this);
+        consultantsAPI.setConsultantsListener(this);
+
         if (connection.isConnected()){
             // get all consultants
-            getAllConsultants();
+            consultantsAPI.getAllConsultants();
+
         }else {
-            Toast.makeText(this, getText(R.string.network_text), Toast.LENGTH_SHORT).show();
+            Toasty.warning(this, getText(R.string.network_text), Toasty.LENGTH_LONG).show();
         }
-    }
-
-    private void getAllConsultants() {
-        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, getString(R.string.CONSULTANT_URL),
-                null,
-                new Response.Listener<JSONArray>() {
-                    @Override
-                    public void onResponse(JSONArray response) {
-                        Log.e("RESPONSE", response.toString());
-                        int count = 0;
-                        while (count<response.length()){
-                            try {
-                                JSONObject jsonObject = response.getJSONObject(count);
-                                ModelConsultant modelConsultant = new ModelConsultant(
-                                        jsonObject.getString("user_id"),
-                                        jsonObject.getString("firstname"),
-                                        jsonObject.getString("lastname"),
-                                        jsonObject.getString("id_number"),
-                                        jsonObject.getString("phone"),
-                                        jsonObject.getString("email"),
-                                        jsonObject.getString("reg_date"),
-                                        jsonObject.getString("refferred_by")
-                                );
-                                consultantArrayList.add(modelConsultant);
-                                count++;
-
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-
-                        //initialise adapter
-                        consultantAdapter = new ConsultantAdapter(ConsultantsActivity.this, consultantArrayList);
-                        //set adapter to recyclerView
-                        consultants_recyclerview.setAdapter(consultantAdapter);
-                        consultant_dialog.setVisibility(View.GONE);
-                        consultants_recyclerview.setVisibility(View.VISIBLE);
-
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.e("VolleyError", error.toString());
-            }
-        });
-
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-        requestQueue.add(jsonArrayRequest);
     }
 
     @Override
@@ -118,5 +70,28 @@ public class ConsultantsActivity extends AppCompatActivity {
         Intent intent = new Intent(ConsultantsActivity.this, AdminHomeActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    @Override
+    public void onConsultantsReceived(List<ModelConsultant> consultantArrayList) {
+        //initialise adapter
+        consultantAdapter = new ConsultantAdapter(ConsultantsActivity.this, consultantArrayList);
+        //set adapter to recyclerView
+        consultants_recyclerview.setAdapter(consultantAdapter);
+        consultant_dialog.setVisibility(View.GONE);
+        consultants_recyclerview.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void onVolleyErrorResponse(VolleyError error) {
+        if (error instanceof NetworkError){
+            Toasty.error(this, "Check your connection and try again", Toasty.LENGTH_LONG).show();
+        }
+        else Toasty.error(this, error.toString(), Toasty.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onJSONObjectException(JSONException e) {
+        Toasty.error(this, e.toString(), Toasty.LENGTH_LONG).show();
     }
 }

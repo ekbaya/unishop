@@ -8,20 +8,22 @@
     tools:context=".activities.AddProductActivity"
     android:background="@color/mintcream">
 
-
     <androidx.core.widget.NestedScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:fillViewport="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical" >
+
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -30,111 +32,83 @@
                 android:layout_marginRight="30dp">
 
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/p_nameEt"
+                    android:id="@+id/price"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Product name" />
+                    android:hint="Price"
+                    android:textColor="@color/colorDark"/>
             </com.google.android.material.textfield.TextInputLayout>
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/textView8"
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:layout_marginRight="30dp"
                 android:layout_marginLeft="30dp"
-                android:text="Select a category"
-                android:textColor="@color/colorBlack"
-                android:textSize="22sp"
-                android:textStyle="bold"/>
+                android:layout_marginRight="30dp">
 
-            <RadioGroup
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginLeft="30dp"
-                android:layout_marginRight="30dp"
-                android:id="@+id/categoryRG">
-
-                <RadioButton
-                    android:id="@+id/healthy_and_Beauty"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/quantity"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="@string/Healthy_and_Beauty" />
+                    android:hint="Quantity"
+                    android:textColor="@color/colorDark"/>
+            </com.google.android.material.textfield.TextInputLayout>
 
-                <RadioButton
-                    android:id="@+id/grocery"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/Grocery"
-                    android:layout_marginTop="10dp"/>
-
-                <RadioButton
-                    android:id="@+id/women_fashion"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/Women_fashion"
-                    android:layout_marginTop="10dp"/>
-
-                <RadioButton
-                    android:id="@+id/men_fashion"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/Men_fashion"
-                    android:layout_marginTop="10dp"/>
-
-                <RadioButton
-                    android:id="@+id/baby_products"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/Baby_products"
-                    android:layout_marginTop="10dp"/>
-
-                <RadioButton
-                    android:id="@+id/phones_and_Tablets"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/Phones_and_Tablets"
-                    android:layout_marginTop="10dp"/>
-
-                <RadioButton
-                    android:id="@+id/electronics"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/Electronics"
-                    android:layout_marginTop="10dp"/>
-
-                <RadioButton
-                    android:id="@+id/computing"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/Computing"
-                    android:layout_marginTop="10dp"/>
-
-                <RadioButton
-                    android:id="@+id/appliance"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/Appliance"
-                    android:layout_marginTop="10dp"/>
-
-                <RadioButton
-                    android:id="@+id/home_and_office"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/Home_and_office"
-                    android:layout_marginTop="10dp"/>
-            </RadioGroup>
-            <Button
-                android:id="@+id/nextBtn"
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:layout_marginRight="30dp"
                 android:layout_marginLeft="30dp"
-                android:text="Next"
+                android:layout_marginRight="30dp">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/p_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Description"
+                    android:textColor="@color/colorDark"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/textView11"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Image"
+                    android:textColor="@color/colorBlack"
+                    android:textStyle="bold"
+                    android:textSize="20sp"/>
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/p_image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Click to select an image"
+                    android:textSize="18sp"
+                    android:textColor="@color/colorBlack"/>
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/submit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Submit"
+                android:layout_marginTop="30dp"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:textAllCaps="false"
                 android:background="@drawable/button_rounded"
                 android:textColor="@color/colorWhite" />
+
         </androidx.appcompat.widget.LinearLayoutCompat>
     </androidx.core.widget.NestedScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>

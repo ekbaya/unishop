@@ -1,4 +1,4 @@
-package com.example.unishop.data;
+package com.example.unishop.utilities;
 
 import android.content.Context;
 import android.content.SharedPreferences;

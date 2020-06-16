@@ -1,48 +1,49 @@
 package com.example.unishop.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.app.AlertDialog;
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
+import android.text.TextUtils;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.TextView;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.android.volley.NetworkError;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.example.unishop.R;
-import com.example.unishop.data.SharedHelper;
+import com.example.unishop.api.AccountAPI;
+import com.example.unishop.services.AccountListener;
+import com.example.unishop.utilities.Loader;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.HashMap;
-import java.util.Map;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import es.dmoral.toasty.Toasty;
 
-public class RegisterActivity extends AppCompatActivity {
+public class RegisterActivity extends AppCompatActivity implements View.OnClickListener,
+        AccountListener, RadioGroup.OnCheckedChangeListener {
     //views
-    EditText firstnameEt, lastnameEt, emailEt, phoneEt, passwordEt, id_numberEt;
-    RadioGroup radioGroup;
-    RadioButton admin_radioButton,consultant_radioButton;
-    Button registerBtn;
+    @BindView(R.id.firstnameEt) EditText firstnameEt;
+    @BindView(R.id.lastnameEt) EditText lastnameEt;
+    @BindView(R.id.emailEt) EditText emailEt;
+    @BindView(R.id.phoneEt) EditText phoneEt;
+    @BindView(R.id.passwordET) EditText passwordEt;
+    @BindView(R.id.id_numberEt)EditText id_numberEt;
+    @BindView(R.id.registerBtn) Button registerBtn;
+    @BindView(R.id.radioGroup) RadioGroup radioGroup;
+    @BindView(R.id.admin_radioButton) RadioButton admin_radioButton;
+    @BindView(R.id.consultant_radioButton) RadioButton consultant_radioButton;
+
 
     private String user_role;
-
-    private ProgressDialog loading;
+    private AccountAPI accountAPI;
+    private Loader loader;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,234 +51,14 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+        ButterKnife.bind(this);
 
-        //init views
-        firstnameEt = findViewById(R.id.firstnameEt);
-        lastnameEt = findViewById(R.id.lastnameEt);
-        emailEt = findViewById(R.id.emailEt);
-        phoneEt = findViewById(R.id.phoneEt);
-        passwordEt = findViewById(R.id.passwordEt);
-        id_numberEt = findViewById(R.id.id_numberEt);
-        radioGroup = findViewById(R.id.radioGroup);
-        admin_radioButton = findViewById(R.id.admin_radioButton);
-        consultant_radioButton = findViewById(R.id.consultant_radioButton);
-        registerBtn = findViewById(R.id.registerBtn);
+        registerBtn.setOnClickListener(this);
+        radioGroup.setOnCheckedChangeListener(this);
 
-        loading = new ProgressDialog(this);
-
-        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                switch (checkedId){
-                    case R.id.admin_radioButton:
-                        user_role = "admin";
-                        consultant_radioButton.setChecked(false);
-                        break;
-                    case R.id.consultant_radioButton:
-                        user_role = "consultant";
-                        admin_radioButton.setChecked(false);
-                        break;
-                }
-            }
-        });
-
-        registerBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String first_name = firstnameEt.getText().toString();
-                String last_name = lastnameEt.getText().toString();
-                String u_email = emailEt.getText().toString();
-                String u_phone = phoneEt.getText().toString();
-                String u_id_number = id_numberEt.getText().toString();
-                String password = passwordEt.getText().toString();
-
-                //Data validation
-                if (first_name.length() != 0 && last_name.length() != 0 && u_email.length() != 0
-                && u_phone.length() != 0 && u_id_number.length() != 0 && password.length() != 0
-                        && user_role.length() != 0 && admin_radioButton.isChecked() || consultant_radioButton.isChecked()){
-
-                    if (!Patterns.EMAIL_ADDRESS.matcher(u_email).matches()){
-                        // Invalid email pattern set error
-                        emailEt.setError("Invalid Email");
-                        emailEt.setFocusable(true);
-                    }
-                    else {
-                       // register user
-                       registerNewUser(first_name,last_name,u_email,u_phone,u_id_number,password,user_role);
-                    }
-
-                }
-                else {
-                    //AlertDialog
-                    AlertDialog.Builder builder= new AlertDialog.Builder(RegisterActivity.this);
-                    //set Layout Linear Layout
-                    LinearLayout linearLayout = new LinearLayout(RegisterActivity.this);
-                    // Views to set in dialog
-                    final TextView textView = new TextView(RegisterActivity.this);
-                    textView.setText("Please fill all fields");
-                    textView.setTextSize(20);
-                    linearLayout.addView(textView);
-                    linearLayout.setPadding(10,10,10,10);
-                    builder.setView(linearLayout);
-
-
-                    //cancel button
-                    builder.setNegativeButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            //dismiss dialog
-                            dialog.dismiss();
-                        }
-                    });
-                    //create and show dialog
-                    builder.create().show();
-                }
-            }
-        });
-
-    }
-
-    private void registerNewUser(final String first_name, final String last_name, final String u_email,
-                                 final String u_phone, final String u_id_number, final String password, final String user_role) {
-        loading.setMessage("Registering...");
-        loading.show();
-
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getString(R.string.REGISTER_URL),
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        loading.dismiss();
-                        Log.i("tagconvertstr", "["+response+"]");
-                        try {
-                            JSONObject jsonObject = new JSONObject(response);
-                            boolean success = jsonObject.getBoolean("success");
-                            String message = jsonObject.getString("message");
-
-                            if (success){
-                                //AlertDialog
-                                AlertDialog.Builder builder= new AlertDialog.Builder(RegisterActivity.this);
-                                //set Layout Linear Layout
-                                LinearLayout linearLayout = new LinearLayout(RegisterActivity.this);
-                                // Views to set in dialog
-                                final TextView textView = new TextView(RegisterActivity.this);
-                                textView.setText(message);
-                                textView.setTextSize(20);
-                                linearLayout.addView(textView);
-                                linearLayout.setPadding(10,10,10,10);
-                                builder.setView(linearLayout);
-                                //cancel button
-                                builder.setNegativeButton("OK", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        //dismiss dialog
-                                        dialog.dismiss();
-                                        firstnameEt.setText("");
-                                        lastnameEt.setText("");
-                                        emailEt.setText("");
-                                        phoneEt.setText("");
-                                        passwordEt.setText("");
-                                        id_numberEt.setText("");
-                                        radioGroup.clearCheck();
-                                    }
-                                });
-                                //create and show dialog
-                                builder.create().show();
-                            }
-                            else {
-                                //AlertDialog
-                                AlertDialog.Builder builder= new AlertDialog.Builder(RegisterActivity.this);
-                                //set Layout Linear Layout
-                                LinearLayout linearLayout = new LinearLayout(RegisterActivity.this);
-                                // Views to set in dialog
-                                final TextView textView = new TextView(RegisterActivity.this);
-                                textView.setText(message);
-                                textView.setTextSize(20);
-                                linearLayout.addView(textView);
-                                linearLayout.setPadding(10,10,10,10);
-                                builder.setView(linearLayout);
-                                //cancel button
-                                builder.setNegativeButton("OK", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        //dismiss dialog
-                                        dialog.dismiss();
-                                    }
-                                });
-                                //create and show dialog
-                                builder.create().show();
-                            }
-                        } catch (JSONException e) {
-                            loading.dismiss();
-                            e.printStackTrace();
-                            //AlertDialog
-                            AlertDialog.Builder builder= new AlertDialog.Builder(RegisterActivity.this);
-                            //set Layout Linear Layout
-                            LinearLayout linearLayout = new LinearLayout(RegisterActivity.this);
-                            // Views to set in dialog
-                            final TextView textView = new TextView(RegisterActivity.this);
-                            textView.setText(""+e.getMessage());
-                            textView.setTextSize(20);
-                            linearLayout.addView(textView);
-                            linearLayout.setPadding(10,10,10,10);
-                            builder.setView(linearLayout);
-                            //cancel button
-                            builder.setNegativeButton("OK", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    //dismiss dialog
-                                    dialog.dismiss();
-                                }
-                            });
-                            //create and show dialog
-                            builder.create().show();
-                        }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        loading.dismiss();
-                        //AlertDialog
-                        AlertDialog.Builder builder= new AlertDialog.Builder(RegisterActivity.this);
-                        //set Layout Linear Layout
-                        LinearLayout linearLayout = new LinearLayout(RegisterActivity.this);
-                        // Views to set in dialog
-                        final TextView textView = new TextView(RegisterActivity.this);
-                        textView.setText(error.getMessage());
-                        textView.setTextSize(20);
-                        linearLayout.addView(textView);
-                        linearLayout.setPadding(10,10,10,10);
-                        builder.setView(linearLayout);
-                        //cancel button
-                        builder.setNegativeButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                //dismiss dialog
-                                dialog.dismiss();
-                            }
-                        });
-                        //create and show dialog
-                        builder.create().show();
-
-                    }
-                }){
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<>();
-                params.put("firstname", first_name);
-                params.put("lastname", last_name);
-                params.put("id_number", u_id_number);
-                params.put("email", u_email);
-                params.put("password", password);
-                params.put("phone", u_phone);
-                params.put("role", user_role);
-                params.put("user_id", SharedHelper.getKey(RegisterActivity.this,"user_id"));
-                return params;
-            }
-        };
-
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-        requestQueue.add(stringRequest);
+        accountAPI = new AccountAPI(this);
+        accountAPI.setAccountListener(this);
+        loader = new Loader(this);
 
     }
 
@@ -292,5 +73,101 @@ public class RegisterActivity extends AppCompatActivity {
         Intent intent = new Intent(RegisterActivity.this, AdminHomeActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    @Override
+    public void onClick(View v) {
+       if (v == registerBtn){
+           String first_name = firstnameEt.getText().toString();
+           String last_name = lastnameEt.getText().toString();
+           String u_email = emailEt.getText().toString();
+           String u_phone = phoneEt.getText().toString();
+           String u_id_number = id_numberEt.getText().toString();
+           String password = passwordEt.getText().toString();
+
+           if (validate()){
+               loader.showDialogue();
+               accountAPI.registerNewUser(first_name,last_name,u_email,u_phone,u_id_number,password,user_role);
+           }
+       }
+    }
+
+    private boolean validate() {
+        if (TextUtils.isEmpty(firstnameEt.getText().toString())){
+            Toasty.warning(this,"Invalid First name", Toasty.LENGTH_LONG).show();
+            return false;
+        }
+        else if (TextUtils.isEmpty(lastnameEt.getText().toString())){
+            Toasty.warning(this,"Invalid Last name", Toasty.LENGTH_LONG).show();
+            return false;
+        }
+        else if (TextUtils.isEmpty(emailEt.getText().toString())){
+            Toasty.warning(this,"Invalid Email", Toasty.LENGTH_LONG).show();
+            return false;
+        }
+        else if (TextUtils.isEmpty(phoneEt.getText().toString())){
+            Toasty.warning(this,"Invalid Phone", Toasty.LENGTH_LONG).show();
+            return false;
+        }
+        else if (TextUtils.isEmpty(id_numberEt.getText().toString())){
+            Toasty.warning(this,"Invalid ID Number", Toasty.LENGTH_LONG).show();
+            return false;
+        }
+        else if (TextUtils.isEmpty(passwordEt.getText().toString())){
+            Toasty.warning(this,"Invalid Password", Toasty.LENGTH_LONG).show();
+            return false;
+        }
+        else if (!Patterns.EMAIL_ADDRESS.matcher(emailEt.getText().toString()).matches()){
+            Toasty.warning(this,"Invalid Email", Toasty.LENGTH_LONG).show();
+            return false;
+        }
+        else if (!admin_radioButton.isChecked() && !consultant_radioButton.isChecked()){
+            Toasty.warning(this,"Invalid user role", Toasty.LENGTH_LONG).show();
+             return false;
+        }else return true;
+    }
+
+    @Override
+    public void onSuccessResponse(JSONObject object) throws JSONException {
+        loader.hideDialogue();
+        boolean success = object.getBoolean("success");
+        String message = object.getString("message");
+
+        if (success){
+            Toasty.success(this, message, Toasty.LENGTH_LONG).show();
+        }
+        else {
+            Toasty.error(this, message, Toasty.LENGTH_LONG).show();
+        }
+
+    }
+
+    @Override
+    public void onVolleyErrorResponse(VolleyError error) {
+        loader.hideDialogue();
+        if (error instanceof NetworkError){
+            Toasty.error(this, "Check your connection and try again", Toasty.LENGTH_LONG).show();
+        }
+        else Toasty.error(this, error.toString(), Toasty.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onJSONObjectException(JSONException e) {
+        loader.hideDialogue();
+        Toasty.error(this, e.toString(), Toasty.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onCheckedChanged(RadioGroup group, int checkedId) {
+        switch (checkedId){
+            case R.id.admin_radioButton:
+                user_role = "admin";
+                consultant_radioButton.setChecked(false);
+                break;
+            case R.id.consultant_radioButton:
+                user_role = "consultant";
+                admin_radioButton.setChecked(false);
+                break;
+        }
     }
 }

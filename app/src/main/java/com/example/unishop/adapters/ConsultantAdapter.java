@@ -1,4 +1,4 @@
-package com.example.unishop.data.adapters;
+package com.example.unishop.adapters;
 
 import android.content.Context;
 import android.content.Intent;
@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.unishop.activities.ConsultantDetailsActivity;
 import com.example.unishop.R;
-import com.example.unishop.data.models.ModelConsultant;
+import com.example.unishop.models.ModelConsultant;
 
 import java.util.List;
 

@@ -1,6 +1,5 @@
 package com.example.unishop.api;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.util.Log;
 
@@ -12,7 +11,9 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.unishop.R;
-import com.example.unishop.services.AccountListiner;
+import com.example.unishop.utilities.Server;
+import com.example.unishop.utilities.SharedHelper;
+import com.example.unishop.services.AccountListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,17 +22,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class AccountAPI {
-    private AccountListiner accountListiner;
+    private AccountListener accountListener;
     private Context context;
-    private ProgressDialog loading;
 
     public AccountAPI(Context context) {
         this.context = context;
-        loading = new ProgressDialog(context);
     }
 
     public void loginUser(final String email, final String password){
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, context.getString(R.string.LOGIN_URL),
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, Server.get().LOGIN_URL,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
@@ -39,16 +38,16 @@ public class AccountAPI {
                         try {
 
                             JSONObject jsonObject = new JSONObject(response);
-                            accountListiner.onSuccessResponse(jsonObject);
+                            accountListener.onSuccessResponse(jsonObject);
                         }catch (JSONException e){
-                            accountListiner.onJSONObjectException(e);
+                            accountListener.onJSONObjectException(e);
                         }
                     }
                 }
                 , new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                accountListiner.onVolleyErrorResponse(error);
+                accountListener.onVolleyErrorResponse(error);
             }
         }){
             @Override
@@ -64,20 +63,51 @@ public class AccountAPI {
         requestQueue.add(stringRequest);
     }
 
-    public void showDialogue(){
-       loading.setMessage("Wait a moment...");
-       loading.show();
+    public void registerNewUser(final String first_name, final String last_name, final String u_email,
+                                 final String u_phone, final String u_id_number, final String password, final String user_role){
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, Server.get().REGISTER_URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.i("tagconvertstr", "["+response+"]");
+                        try {
+                            JSONObject jsonObject = new JSONObject(response);
+                            accountListener.onSuccessResponse(jsonObject);
+                        } catch (JSONException e) {
+                            accountListener.onJSONObjectException(e);
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        accountListener.onVolleyErrorResponse(error);
+                    }
+                }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("firstname", first_name);
+                params.put("lastname", last_name);
+                params.put("id_number", u_id_number);
+                params.put("email", u_email);
+                params.put("password", password);
+                params.put("phone", u_phone);
+                params.put("role", user_role);
+                params.put("user_id", SharedHelper.getKey(context,"user_id"));
+                return params;
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+        requestQueue.add(stringRequest);
+    }
+    public AccountListener getAccountListener() {
+        return accountListener;
     }
 
-    public void hideDialogue(){
-        loading.dismiss();
-    }
-
-    public AccountListiner getAccountListiner() {
-        return accountListiner;
-    }
-
-    public void setAccountListiner(AccountListiner accountListiner) {
-        this.accountListiner = accountListiner;
+    public void setAccountListener(AccountListener accountListener) {
+        this.accountListener = accountListener;
     }
 }
