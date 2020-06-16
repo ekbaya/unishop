@@ -5,13 +5,13 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
 public class NetworkConnection {
-    private Context context;
+    private static NetworkConnection networkConnection = new NetworkConnection();
 
-    public NetworkConnection(Context context) {
-        this.context = context;
+    public  NetworkConnection get(){
+        return networkConnection;
     }
 
-    public boolean isConnected(){
+    public boolean isConnected(Context context){
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         if(connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE).getState() == NetworkInfo.State.CONNECTED ||

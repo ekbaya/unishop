@@ -18,6 +18,7 @@ import com.example.unishop.R;
 import com.example.unishop.api.CategoriesAPI;
 import com.example.unishop.models.ModelCategory;
 import com.example.unishop.services.CategoriesListener;
+import com.example.unishop.utilities.NetworkConnection;
 import com.example.unishop.utilities.SharedHelper;
 
 import org.json.JSONException;
@@ -53,7 +54,16 @@ View.OnClickListener, CategoriesListener {
 
         categoriesAPI = new CategoriesAPI(this);
         categoriesAPI.setCategoriesListener(this);
-        categoriesAPI.getCategories();
+        loadCategories();
+    }
+
+    private void loadCategories() {
+        if (new NetworkConnection().get().isConnected(this)){
+            categoriesAPI.getCategories();
+
+        }else {
+            Toasty.warning(this, getText(R.string.network_text), Toasty.LENGTH_LONG).show();
+        }
     }
 
     private boolean validate() {

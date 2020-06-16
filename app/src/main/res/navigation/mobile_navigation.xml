@@ -7,19 +7,19 @@
 
     <fragment
         android:id="@+id/navigation_home"
-        android:name="consultant.ui.home.HomeFragment"
-        android:label="@string/title_home"
+        android:name="consultant.fragments.HomeFragment"
+        android:label="All Products"
         tools:layout="@layout/fragment_home" />
 
     <fragment
         android:id="@+id/navigation_categories"
-        android:name="consultant.ui.categories.CategoriesFragment"
+        android:name="consultant.fragments.CategoriesFragment"
         android:label="@string/title_categories"
         tools:layout="@layout/fragment_categories" />
 
     <fragment
         android:id="@+id/navigation_account"
-        android:name="consultant.ui.account.AccountFragment"
-        android:label="@string/title_account"
+        android:name="consultant.fragments.AccountFragment"
+        android:label="Profile"
         tools:layout="@layout/fragment_account" />
 </navigation>

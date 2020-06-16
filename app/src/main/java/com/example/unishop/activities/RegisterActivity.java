@@ -33,7 +33,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     @BindView(R.id.lastnameEt) EditText lastnameEt;
     @BindView(R.id.emailEt) EditText emailEt;
     @BindView(R.id.phoneEt) EditText phoneEt;
-    @BindView(R.id.passwordET) EditText passwordEt;
+    @BindView(R.id.passwordEt) EditText passwordEt;
     @BindView(R.id.id_numberEt)EditText id_numberEt;
     @BindView(R.id.registerBtn) Button registerBtn;
     @BindView(R.id.radioGroup) RadioGroup radioGroup;

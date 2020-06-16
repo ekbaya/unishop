@@ -43,4 +43,8 @@
     <string name="disclaimer">By Clicking Remove u agree that this item is going to be deleted permanently and this process is irrevocable.</string>
     <string name="remove">Remove</string>
     <string name="enter_the_item_id">Enter the item id</string>
+    <string name="logout_warning">Are you sure you want to exit?</string>
+    <string name="search">Search</string>
+    <string name="add_product">Add Product</string>
+    <string name="logout">Logout</string>
 </resources>

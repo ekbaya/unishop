@@ -12,8 +12,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.android.volley.NetworkError;
 import com.android.volley.VolleyError;
 import com.example.unishop.R;
-import com.example.unishop.api.ConsultantsAPI;
 import com.example.unishop.adapters.ConsultantAdapter;
+import com.example.unishop.api.ConsultantsAPI;
 import com.example.unishop.models.ModelConsultant;
 import com.example.unishop.services.ConsultantsListener;
 import com.example.unishop.utilities.NetworkConnection;
@@ -45,12 +45,13 @@ public class ConsultantsActivity extends AppCompatActivity implements Consultant
         consultants_recyclerview.setHasFixedSize(true);
         consultants_recyclerview.setLayoutManager(new LinearLayoutManager(this));
 
-        NetworkConnection connection = new NetworkConnection(this);
-
         consultantsAPI = new ConsultantsAPI(this);
         consultantsAPI.setConsultantsListener(this);
+        loadConsultants();
+    }
 
-        if (connection.isConnected()){
+    private void loadConsultants() {
+        if (new NetworkConnection().get().isConnected(this)){
             // get all consultants
             consultantsAPI.getAllConsultants();
 

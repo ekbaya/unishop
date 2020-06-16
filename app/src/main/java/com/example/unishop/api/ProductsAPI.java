@@ -178,6 +178,56 @@ public class ProductsAPI {
         requestQueue.add(jsonArrayRequest);
     }
 
+    public void searchProducts(String query){
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, Server.get().SEARCH_PRODUCTS_URL,
+                null,
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        Log.e("RESPONSE", response.toString());
+                        int count = 0;
+                        while (count<response.length()){
+                            try {
+                                JSONObject jsonObject = response.getJSONObject(count);
+                                ModelProduct modelProduct = new ModelProduct(
+                                        jsonObject.getString("id"),
+                                        jsonObject.getString("name"),
+                                        jsonObject.getString("category"),
+                                        jsonObject.getString("price"),
+                                        jsonObject.getString("quantity"),
+                                        jsonObject.getString("description"),
+                                        jsonObject.getString("image_url")
+                                );
+                                productList.add(modelProduct);
+                                count++;
+
+                            } catch (JSONException e) {
+                                productsListener.onJSONObjectException(e);
+                            }
+                        }
+
+                        productsListener.onProductsReceived(productList);
+
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                productsListener.onVolleyErrorResponse(error);
+            }
+        }){
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<>();
+                params.put("keyword", query);
+                return params;
+            }
+        };
+
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+        requestQueue.add(jsonArrayRequest);
+
+    }
+
     public void deleteProduct(String id){
         StringRequest stringRequest = new StringRequest(Request.Method.POST, new Server().DELETE_PRODUCT_URL, new Response.Listener<String>() {
             @Override
