@@ -1,4 +1,4 @@
-package consultant.ui.categories;
+package consultant.fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
