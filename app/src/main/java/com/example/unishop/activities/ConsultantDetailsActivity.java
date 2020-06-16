@@ -50,15 +50,8 @@ public class ConsultantDetailsActivity extends AppCompatActivity implements Cons
 
         consultantsAPI = new ConsultantsAPI(this);
         consultantsAPI.setConsultantListener(this);
-
-
         //set data to views
         setDataToViews();
-        String user_id = intent.getStringExtra("created_by");
-
-        if (new NetworkConnection().get().isConnected(this)){
-            consultantsAPI.getUserProfile(user_id);
-        }else Toasty.warning(this, getText(R.string.network_text), Toasty.LENGTH_LONG).show();
     }
 
     private void setDataToViews() {
@@ -68,6 +61,11 @@ public class ConsultantDetailsActivity extends AppCompatActivity implements Cons
         national_idTv.setText(intent.getStringExtra("id_number"));
         emailTv.setText(intent.getStringExtra("email"));
         created_dateTv.setText(intent.getStringExtra("date_created"));
+
+        String user_id = intent.getStringExtra("created_by");
+        if (new NetworkConnection().get().isConnected(this)){
+            consultantsAPI.getUserProfile(user_id);
+        }else Toasty.warning(this, getText(R.string.network_text), Toasty.LENGTH_LONG).show();
     }
 
     @Override
