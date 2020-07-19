@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.example.unishop.BuildConfig;
+import com.example.unishop.models.User;
 
 
 public class SharedHelper {

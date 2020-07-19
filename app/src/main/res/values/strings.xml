@@ -24,17 +24,6 @@
     <string name="error_text">Ops! some error occurred check and try again</string>
     <string name="permissions_text">All the permissions are required in order to access the services, please allow</string>
 
-    <!--    Categories-->
-    <string name="Healthy_and_Beauty">Healthy &amp; Beauty</string>
-    <string name="Grocery">Grocery</string>
-    <string name="Women_fashion">Women\'s Fashion</string>
-    <string name="Men_fashion">Men\'s Fashion</string>
-    <string name="Baby_products">Baby\'s Products</string>
-    <string name="Phones_and_Tablets">Phones &amp; Tablets</string>
-    <string name="Electronics">Electronics</string>
-    <string name="Computing">Computing</string>
-    <string name="Appliance">Appliance</string>
-    <string name="Home_and_office">Home &amp; Office</string>
 
 
     <string name="name_and_description">Refurbished Elitebook Folio 9480m - 14" - Intel Core I7 - 8GB RAM - 500GB HDD - Silver</string>
@@ -47,4 +36,10 @@
     <string name="search">Search</string>
     <string name="add_product">Add Product</string>
     <string name="logout">Logout</string>
+    <string name="create_an_account">Register new user</string>
+    <string name="add_category">Add Category</string>
+    <string name="add_a_new_product_category">Add a new product category</string>
+    <string name="description">Description</string>
+    <string name="name">Name</string>
+    <string name="send">Send</string>
 </resources>

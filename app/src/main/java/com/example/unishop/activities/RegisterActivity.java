@@ -27,7 +27,7 @@ import butterknife.ButterKnife;
 import es.dmoral.toasty.Toasty;
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener,
-        AccountListener, RadioGroup.OnCheckedChangeListener {
+        AccountListener.RegistrationListener, RadioGroup.OnCheckedChangeListener {
     //views
     @BindView(R.id.firstnameEt) EditText firstnameEt;
     @BindView(R.id.lastnameEt) EditText lastnameEt;
@@ -57,7 +57,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         radioGroup.setOnCheckedChangeListener(this);
 
         accountAPI = new AccountAPI(this);
-        accountAPI.setAccountListener(this);
+        accountAPI.setRegistrationListener(this);
         loader = new Loader(this);
 
     }
@@ -77,7 +77,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
     @Override
     public void onClick(View v) {
-       if (v == registerBtn){
+       if (v.equals(registerBtn)){
            String first_name = firstnameEt.getText().toString();
            String last_name = lastnameEt.getText().toString();
            String u_email = emailEt.getText().toString();
@@ -128,36 +128,6 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     }
 
     @Override
-    public void onSuccessResponse(JSONObject object) throws JSONException {
-        loader.hideDialogue();
-        boolean success = object.getBoolean("success");
-        String message = object.getString("message");
-
-        if (success){
-            Toasty.success(this, message, Toasty.LENGTH_LONG).show();
-        }
-        else {
-            Toasty.error(this, message, Toasty.LENGTH_LONG).show();
-        }
-
-    }
-
-    @Override
-    public void onVolleyErrorResponse(VolleyError error) {
-        loader.hideDialogue();
-        if (error instanceof NetworkError){
-            Toasty.error(this, "Check your connection and try again", Toasty.LENGTH_LONG).show();
-        }
-        else Toasty.error(this, error.toString(), Toasty.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void onJSONObjectException(JSONException e) {
-        loader.hideDialogue();
-        Toasty.error(this, e.toString(), Toasty.LENGTH_LONG).show();
-    }
-
-    @Override
     public void onCheckedChanged(RadioGroup group, int checkedId) {
         switch (checkedId){
             case R.id.admin_radioButton:
@@ -169,5 +139,19 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 admin_radioButton.setChecked(false);
                 break;
         }
+    }
+
+    @Override
+    public void onAccountCreated() {
+        loader.hideDialogue();
+        Toasty.success(this, "User created successfully...", Toasty.LENGTH_LONG).show();
+
+    }
+
+    @Override
+    public void onFailureResponse(Exception e) {
+        loader.hideDialogue();
+        Toasty.error(this, "Account could not be created. "+e.getMessage(), Toasty.LENGTH_LONG).show();
+
     }
 }

@@ -7,17 +7,13 @@ import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.volley.NetworkError;
 import com.android.volley.VolleyError;
 import com.example.unishop.R;
-import com.example.unishop.api.ConsultantsAPI;
-import com.example.unishop.services.UpdatePhoneListener;
 import com.example.unishop.utilities.Loader;
-import com.example.unishop.utilities.NetworkConnection;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -90,13 +86,8 @@ public class UpdatePhoneActivity extends AppCompatActivity implements View.OnCli
                String email = emailEt.getText().toString();
                String phone = phoneEt.getText().toString();
 
-               if (new NetworkConnection().get().isConnected(this)){
-                   consultantsAPI.updatePhone(email, phone);
-                   loader.showDialogue();
-               }
-               else {
-                   Toast.makeText(UpdatePhoneActivity.this, getText(R.string.network_text), Toast.LENGTH_SHORT).show();
-               }
+               consultantsAPI.updatePhone(email, phone);
+               loader.showDialogue();
            }
        }
     }

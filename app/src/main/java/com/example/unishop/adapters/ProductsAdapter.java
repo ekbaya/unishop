@@ -9,16 +9,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.unishop.R;
-import com.example.unishop.models.ModelProduct;
+import com.example.unishop.models.Product;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
 public class ProductsAdapter extends BaseAdapter {
     private Context context;
-    List<ModelProduct> productList;
+    List<Product> productList;
 
-    public ProductsAdapter(Context context, List<ModelProduct> productList) {
+    public ProductsAdapter(Context context, List<Product> productList) {
         this.context = context;
         this.productList = productList;
     }
@@ -54,7 +54,7 @@ public class ProductsAdapter extends BaseAdapter {
             productPrice.setText("KSH "+productList.get(position).getPrice());
             productCategory.setText("Category: "+productList.get(position).getCategory());
             try {
-                Picasso.get().load(productList.get(position).getImage_url()).into(productImage);
+                Picasso.get().load(productList.get(position).getImage()).into(productImage);
 
             }catch (Exception e){
 

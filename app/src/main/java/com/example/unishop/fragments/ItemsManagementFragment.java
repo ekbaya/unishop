@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
+import com.example.unishop.activities.AddCategoryActivity;
 import com.example.unishop.activities.CategoriesActivity;
 import com.example.unishop.R;
 import com.example.unishop.activities.ProductsActivity;
@@ -22,6 +23,7 @@ import butterknife.ButterKnife;
 public class ItemsManagementFragment extends Fragment implements View.OnClickListener {
     //views
     @BindView(R.id.addItemCard) CardView addItemCard;
+    @BindView(R.id.addCategoryCard) CardView addCategoryCard;
     @BindView(R.id.updateItemsCard) CardView updateItemsCard;
     @BindView(R.id.viewItemsCard) CardView viewItemsCard;
     @BindView(R.id.removeItemCard) CardView removeItemCard;
@@ -31,6 +33,7 @@ public class ItemsManagementFragment extends Fragment implements View.OnClickLis
         View view = inflater.inflate(R.layout.fragment_itmes_management, container, false);
         ButterKnife.bind(this, view);
         addItemCard.setOnClickListener(this);
+        addCategoryCard.setOnClickListener(this);
         updateItemsCard.setOnClickListener(this);
         viewItemsCard.setOnClickListener(this);
         removeItemCard.setOnClickListener(this);
@@ -42,6 +45,9 @@ public class ItemsManagementFragment extends Fragment implements View.OnClickLis
     public void onClick(View v) {
        if (v.equals(addItemCard)){
            startActivity(new Intent(new Intent(getActivity(), CategoriesActivity.class)));
+       }
+       if (v.equals(addCategoryCard)){
+           startActivity(new Intent(new Intent(getActivity(), AddCategoryActivity.class)));
        }
        if (v.equals(updateItemsCard)){
            startActivity(new Intent(new Intent(getActivity(), UpdateItemsActivity.class)));

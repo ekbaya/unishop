@@ -14,7 +14,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.RemoveItemActivity"></activity>
+        <activity android:name=".activities.AddCategoryActivity"></activity>
+        <activity android:name=".activities.RemoveItemActivity" />
         <activity android:name=".activities.ProductsActivity" />
         <activity android:name=".activities.UpdateItemsActivity" />
         <activity android:name=".activities.PermissionsActivity" />
@@ -28,9 +29,9 @@
             android:name=".activities.UpdatePhoneActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".activities.ConsultantDetailsActivity"
+            android:name=".activities.ProfileActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".activities.ConsultantsActivity" />
+        <activity android:name=".activities.UsersActivity" />
         <activity
             android:name="consultant.DasboardActivity"
             android:label="@string/title_activity_dasboard"

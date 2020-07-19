@@ -1,24 +1,28 @@
 package com.example.unishop.services;
 
-import com.android.volley.VolleyError;
-import com.example.unishop.models.ModelProduct;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.example.unishop.models.Product;
+import com.google.firebase.database.DatabaseError;
 
 import java.util.List;
 
 public interface ProductsListener {
-    void onItemAdded(JSONObject object) throws JSONException;
-    void onVolleyErrorResponse(VolleyError error);
-    void onJSONObjectException(JSONException e);
-    void onProductsReceived(List<ModelProduct> productList);
+    interface AddItemListener{
+        void onItemAdded();
+        void onFailureAddingItem(Exception e);
+        void onFailureUploadingImage(Exception e);
+    }
+    interface LoadItemsListener{
+        void onProductsReceived(List<Product> productList);
+        void onDatabaseCancelled(DatabaseError error);
+    }
 
-    interface UpdateListener{
-        void onPriceUpdated(JSONObject object) throws JSONException;
-        void onQuantityUpdated(JSONObject object) throws JSONException;
-        void onProductDeleted(JSONObject object) throws JSONException;
-        void onVolleyErrorResponse(VolleyError error);
-        void onJSONObjectException(JSONException e);
+    interface UpdatePriceListener{
+        void onPriceUpdated();
+        void onDatabaseCancelled(DatabaseError error);
+    }
+
+    interface UpdateQuantityListener{
+        void onQuantityUpdated();
+        void onDatabaseCancelled(DatabaseError error);
     }
 }

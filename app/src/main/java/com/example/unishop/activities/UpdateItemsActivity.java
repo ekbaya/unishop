@@ -15,6 +15,7 @@ import com.example.unishop.R;
 import com.example.unishop.api.ProductsAPI;
 import com.example.unishop.services.ProductsListener;
 import com.example.unishop.utilities.Loader;
+import com.google.firebase.database.DatabaseError;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -23,7 +24,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import es.dmoral.toasty.Toasty;
 
-public class UpdateItemsActivity extends AppCompatActivity implements ProductsListener.UpdateListener ,
+public class UpdateItemsActivity extends AppCompatActivity implements ProductsListener.UpdateQuantityListener, ProductsListener.UpdatePriceListener ,
         View.OnClickListener {
     @BindView(R.id.pp_editText) EditText pp_editText;
     @BindView(R.id.priceEt) EditText priceEt;
@@ -45,7 +46,8 @@ public class UpdateItemsActivity extends AppCompatActivity implements ProductsLi
         qupdateBtn.setOnClickListener(this);
 
         productsAPI = new ProductsAPI(this);
-        productsAPI.setUpdateListener(this);
+        productsAPI.setUpdatePriceListener(this);
+        productsAPI.setUpdateQuantityListener(this);
         loader = new Loader(this);
     }
 
@@ -61,62 +63,6 @@ public class UpdateItemsActivity extends AppCompatActivity implements ProductsLi
         startActivity(intent);
         finish();
     }
-
-    @Override
-    public void onPriceUpdated(JSONObject object) throws JSONException {
-        loader.hideDialogue();
-        boolean success = object.getBoolean("success");
-        String message = object.getString("message");
-
-        if (success){
-            Toasty.success(this, message, Toasty.LENGTH_LONG).show();
-            pp_editText.setText("");
-            priceEt.setText("");
-        }
-        else {
-            Toasty.error(this, message + " , check the id and try again", Toasty.LENGTH_LONG).show();
-        }
-
-    }
-
-    @Override
-    public void onQuantityUpdated(JSONObject object) throws JSONException {
-        loader.hideDialogue();
-        boolean success = object.getBoolean("success");
-        String message = object.getString("message");
-
-        if (success){
-            Toasty.success(this, message, Toasty.LENGTH_LONG).show();
-            qp_editText.setText("");
-            quantityEt.setText("");
-        }
-        else {
-            Toasty.error(this, message + " , check the id and try again", Toasty.LENGTH_LONG).show();
-        }
-
-    }
-
-    @Override
-    public void onProductDeleted(JSONObject object) throws JSONException {
-
-    }
-
-    @Override
-    public void onVolleyErrorResponse(VolleyError error) {
-        loader.hideDialogue();
-        if (error instanceof NetworkError){
-            Toasty.error(this, "Check your connection and try again", Toasty.LENGTH_LONG).show();
-        }
-        else Toasty.error(this, error.toString(), Toasty.LENGTH_LONG).show();
-
-    }
-
-    @Override
-    public void onJSONObjectException(JSONException e) {
-        loader.hideDialogue();
-        Toasty.error(this, e.toString(), Toasty.LENGTH_LONG).show();
-    }
-
     @Override
     public void onClick(View v) {
         if (v.equals(pupdateBtn)){
@@ -157,5 +103,28 @@ public class UpdateItemsActivity extends AppCompatActivity implements ProductsLi
             Toasty.warning(this, "Invalid Price", Toasty.LENGTH_LONG).show();
             return false;
         }else return true;
+    }
+
+    @Override
+    public void onPriceUpdated() {
+        loader.hideDialogue();
+        Toasty.success(this, "Price updated successfully...", Toasty.LENGTH_LONG).show();
+        qp_editText.setText("");
+        quantityEt.setText("");
+
+    }
+
+    @Override
+    public void onQuantityUpdated() {
+        loader.hideDialogue();
+        Toasty.success(this, "Quantity updated successfully...", Toasty.LENGTH_LONG).show();
+        qp_editText.setText("");
+        quantityEt.setText("");
+
+    }
+
+    @Override
+    public void onDatabaseCancelled(DatabaseError error) {
+
     }
 }
