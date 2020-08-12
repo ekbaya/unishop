@@ -10,14 +10,13 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
-import com.example.unishop.activities.ConsultantsActivity;
+import com.example.unishop.activities.UsersActivity;
 import com.example.unishop.R;
 import com.example.unishop.activities.RegisterActivity;
-import com.example.unishop.activities.UpdatePhoneActivity;
 
 public class ConsultantsManagementFragment extends Fragment {
     //views
-    private CardView addNewUserCard, view_consultants_cardView, updateCardView;
+    private CardView addNewUserCard, view_consultants_cardView;
 
     //Extracting data from the intent
     private Intent intent;
@@ -32,7 +31,6 @@ public class ConsultantsManagementFragment extends Fragment {
         //init views
         addNewUserCard = view.findViewById(R.id.addNewUserCard);
         view_consultants_cardView = view.findViewById(R.id.view_consultants_cardView);
-        updateCardView = view.findViewById(R.id.updateCardView);
 
         intent = getActivity().getIntent();
         user_id = intent.getStringExtra("user_id");
@@ -52,15 +50,7 @@ public class ConsultantsManagementFragment extends Fragment {
         view_consultants_cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), ConsultantsActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        updateCardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), UpdatePhoneActivity.class);
+                Intent intent = new Intent(getActivity(), UsersActivity.class);
                 startActivity(intent);
             }
         });

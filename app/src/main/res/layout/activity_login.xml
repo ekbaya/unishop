@@ -59,7 +59,21 @@
             android:textAllCaps="false"
             android:textColor="#fff" />
 
-
+        <Button
+            android:id="@+id/btnRegister"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/create_an_account"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginLeft="30dp"
+            android:background="@drawable/button_round_register"
+            android:textColor="@color/colorText"
+            android:textAllCaps="false"
+            android:gravity="center"
+            android:textSize="16sp"
+            android:textStyle="bold"/>
     </LinearLayout>
 
 </RelativeLayout>

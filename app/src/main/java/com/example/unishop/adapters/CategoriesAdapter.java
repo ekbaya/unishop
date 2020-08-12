@@ -11,15 +11,15 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.unishop.R;
-import com.example.unishop.models.ModelCategory;
+import com.example.unishop.models.Category;
 
 import java.util.List;
 
 public class CategoriesAdapter extends RecyclerView.Adapter<CategoriesAdapter.MyHolder>{
     private Context context;
-    private List<ModelCategory> categoryList;
+    private List<Category> categoryList;
 
-    public CategoriesAdapter(Context context, List<ModelCategory> categoryList) {
+    public CategoriesAdapter(Context context, List<Category> categoryList) {
         this.context = context;
         this.categoryList = categoryList;
     }

@@ -1,14 +1,18 @@
 package com.example.unishop.services;
 
-import com.android.volley.VolleyError;
-import com.example.unishop.models.ModelCategory;
-
-import org.json.JSONException;
+import com.example.unishop.models.Category;
+import com.google.firebase.database.DatabaseError;
 
 import java.util.List;
 
 public interface CategoriesListener {
-    void onVolleyErrorResponse(VolleyError error);
-    void onJSONObjectException(JSONException e);
-    void onCategoriesReceived(List<ModelCategory> categoryList);
+    interface LoadCategoriesListener{
+        void onCategoriesReceived(List<Category> categoryList);
+        void onDatabaseCancelled(DatabaseError error);
+    }
+
+    interface AddCategoryListener{
+        void onCategoryAdded();
+        void onFailure(Exception e);
+    }
 }
