@@ -1,38 +1,47 @@
 package com.example.unishop.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
+import androidx.core.view.MenuItemCompat;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.GridView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.android.volley.NetworkError;
 import com.android.volley.VolleyError;
 import com.example.unishop.R;
+import com.example.unishop.adapters.ProductsAdapter;
 import com.example.unishop.api.ProductsAPI;
+import com.example.unishop.models.Product;
 import com.example.unishop.services.ProductsListener;
 import com.example.unishop.utilities.Loader;
+import com.example.unishop.utilities.SharedHelper;
+import com.google.firebase.database.DatabaseError;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import es.dmoral.toasty.Toasty;
 
-public class UpdateItemsActivity extends AppCompatActivity implements ProductsListener.UpdateListener ,
-        View.OnClickListener {
-    @BindView(R.id.pp_editText) EditText pp_editText;
-    @BindView(R.id.priceEt) EditText priceEt;
-    @BindView(R.id.qp_editText) EditText qp_editText;
-    @BindView(R.id.quantityEt) EditText quantityEt;
-    @BindView(R.id.pupdateBtn) Button pupdateBtn;
-    @BindView(R.id.qupdateBtn) Button qupdateBtn;
-
+public class UpdateItemsActivity extends AppCompatActivity implements ProductsListener.LoadItemsListener{
+    @BindView(R.id.gridView_layout) GridView productsGridView;
     private ProductsAPI productsAPI;
+    private ProductsAdapter productsAdapter;
     private Loader loader;
 
     @Override
@@ -41,12 +50,10 @@ public class UpdateItemsActivity extends AppCompatActivity implements ProductsLi
         setContentView(R.layout.activity_update_items);
         ButterKnife.bind(this);
 
-        pupdateBtn.setOnClickListener(this);
-        qupdateBtn.setOnClickListener(this);
-
         productsAPI = new ProductsAPI(this);
-        productsAPI.setUpdateListener(this);
+        productsAPI.setLoadItemsListener(this);
         loader = new Loader(this);
+        loadProducts();
     }
 
     @Override
@@ -63,99 +70,112 @@ public class UpdateItemsActivity extends AppCompatActivity implements ProductsLi
     }
 
     @Override
-    public void onPriceUpdated(JSONObject object) throws JSONException {
+    public void onProductsReceived(List<Product> productList) {
         loader.hideDialogue();
-        boolean success = object.getBoolean("success");
-        String message = object.getString("message");
+        productsAdapter = new ProductsAdapter(UpdateItemsActivity.this, productList);
+        productsGridView.setAdapter(productsAdapter);
+    }
 
-        if (success){
-            Toasty.success(this, message, Toasty.LENGTH_LONG).show();
-            pp_editText.setText("");
-            priceEt.setText("");
-        }
-        else {
-            Toasty.error(this, message + " , check the id and try again", Toasty.LENGTH_LONG).show();
-        }
+    @Override
+    public void onDatabaseCancelled(DatabaseError error) {
 
     }
 
     @Override
-    public void onQuantityUpdated(JSONObject object) throws JSONException {
-        loader.hideDialogue();
-        boolean success = object.getBoolean("success");
-        String message = object.getString("message");
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
 
-        if (success){
-            Toasty.success(this, message, Toasty.LENGTH_LONG).show();
-            qp_editText.setText("");
-            quantityEt.setText("");
-        }
-        else {
-            Toasty.error(this, message + " , check the id and try again", Toasty.LENGTH_LONG).show();
-        }
+        //searchView to search product by product name/description
+        MenuItem item = menu.findItem(R.id.action_search);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(item);
 
-    }
-
-    @Override
-    public void onProductDeleted(JSONObject object) throws JSONException {
-
-    }
-
-    @Override
-    public void onVolleyErrorResponse(VolleyError error) {
-        loader.hideDialogue();
-        if (error instanceof NetworkError){
-            Toasty.error(this, "Check your connection and try again", Toasty.LENGTH_LONG).show();
-        }
-        else Toasty.error(this, error.toString(), Toasty.LENGTH_LONG).show();
-
-    }
-
-    @Override
-    public void onJSONObjectException(JSONException e) {
-        loader.hideDialogue();
-        Toasty.error(this, e.toString(), Toasty.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void onClick(View v) {
-        if (v.equals(pupdateBtn)){
-            if (validatePrice()){
-                String id = pp_editText.getText().toString();
-                String price = priceEt.getText().toString();
-                productsAPI.updatePrice(id, price);
-                loader.showDialogue();
+        //search listener
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                //called when user press search button
+                if (!TextUtils.isEmpty(s)){
+                    searchProducts(s);
+                }
+                else {
+                    loadProducts();
+                }
+                return false;
             }
-        }
-        if (v.equals(qupdateBtn)){
-            if (validateQuantity()){
-                String id = qp_editText.getText().toString();
-                String quantity = quantityEt.getText().toString();
-                productsAPI.updateQuantity(id, quantity);
-                loader.showDialogue();
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                //called as and when user press any letter
+                if (!TextUtils.isEmpty(s)){
+                    searchProducts(s);
+                }
+                else {
+                    loadProducts();
+                }
+                return false;
             }
-        }
+        });
+        return true;
     }
 
-    private boolean validateQuantity() {
-        if (TextUtils.isEmpty(qp_editText.getText().toString())){
-            Toasty.warning(this, "Invalid product id", Toasty.LENGTH_LONG).show();
-            return false;
-        }
-        else if (TextUtils.isEmpty(quantityEt.getText().toString())){
-            Toasty.warning(this, "Invalid Quantity", Toasty.LENGTH_LONG).show();
-            return false;
-        }else return true;
+    private void loadProducts() {
+        productsAPI.getAllProducts();
+        loader.showDialogue();
     }
 
-    private boolean validatePrice() {
-        if (TextUtils.isEmpty(pp_editText.getText().toString())){
-            Toasty.warning(this, "Invalid product id", Toasty.LENGTH_LONG).show();
-            return false;
+    private void searchProducts(String s) {
+        productsAPI.searchProducts(s);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // get item id
+        int id = item.getItemId();
+        if (id == R.id.action_logout){
+            showLogoutDialogue();
         }
-        else if (TextUtils.isEmpty(priceEt.getText().toString())){
-            Toasty.warning(this, "Invalid Price", Toasty.LENGTH_LONG).show();
-            return false;
-        }else return true;
+        if (id == R.id.action_add_product){
+            startActivity(new Intent(this, CategoriesActivity.class));
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void showLogoutDialogue() {
+        //AlertDialog
+        AlertDialog.Builder builder= new AlertDialog.Builder(UpdateItemsActivity.this);
+        //set Layout Linear Layout
+        LinearLayout linearLayout = new LinearLayout(UpdateItemsActivity.this);
+        // Views to set in dialog
+        final TextView textView = new TextView(UpdateItemsActivity.this);
+        textView.setText("Are you sure you want to exit?");
+        textView.setTextSize(20);
+        linearLayout.addView(textView);
+        linearLayout.setPadding(10,10,10,10);
+        builder.setView(linearLayout);
+
+
+        //cancel button
+        builder.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //dismiss dialog
+                dialog.dismiss();
+            }
+        });
+
+        //Reset pin button
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                SharedHelper.clearSharedPreferences(UpdateItemsActivity.this);
+                startActivity(new Intent(new Intent(UpdateItemsActivity.this, LoginActivity.class)));
+                finish();
+            }
+        });
+
+        //create and show dialog
+        builder.create().show();
     }
 }

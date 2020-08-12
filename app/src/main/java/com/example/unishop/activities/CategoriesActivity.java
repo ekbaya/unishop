@@ -16,13 +16,12 @@ import com.android.volley.NetworkError;
 import com.android.volley.VolleyError;
 import com.example.unishop.R;
 import com.example.unishop.api.CategoriesAPI;
-import com.example.unishop.models.ModelCategory;
+import com.example.unishop.models.Category;
 import com.example.unishop.services.CategoriesListener;
-import com.example.unishop.utilities.NetworkConnection;
 import com.example.unishop.utilities.SharedHelper;
+import com.google.firebase.database.DatabaseError;
 
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,13 +31,14 @@ import butterknife.ButterKnife;
 import es.dmoral.toasty.Toasty;
 
 public class CategoriesActivity extends AppCompatActivity implements RadioGroup.OnCheckedChangeListener,
-View.OnClickListener, CategoriesListener {
+View.OnClickListener, CategoriesListener.LoadCategoriesListener {
     //views
     @BindView(R.id.p_nameEt) EditText p_nameEt;
     @BindView(R.id.categoryRG) RadioGroup categoryRG;
     @BindView(R.id.nextBtn) Button nextBtn;
 
     private CategoriesAPI categoriesAPI;
+    private List<String> categories;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,18 +52,14 @@ View.OnClickListener, CategoriesListener {
         categoryRG.setOnCheckedChangeListener(this);
         nextBtn.setOnClickListener(this);
 
-        categoriesAPI = new CategoriesAPI(this);
-        categoriesAPI.setCategoriesListener(this);
+        categoriesAPI = new CategoriesAPI();
+        categoriesAPI.setLoadCategoriesListener(this);
+        categories = new ArrayList<>();
         loadCategories();
     }
 
     private void loadCategories() {
-        if (new NetworkConnection().get().isConnected(this)){
-            categoriesAPI.getCategories();
-
-        }else {
-            Toasty.warning(this, getText(R.string.network_text), Toasty.LENGTH_LONG).show();
-        }
+        categoriesAPI.getCategories();
     }
 
     private boolean validate() {
@@ -99,32 +95,32 @@ View.OnClickListener, CategoriesListener {
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId) {
         switch (checkedId){
+            case 0:
+                SharedHelper.putKey(CategoriesActivity.this,"category", categories.get(0));
+                break;
             case 1:
-                SharedHelper.putKey(CategoriesActivity.this,"category_id", "1");
+                SharedHelper.putKey(CategoriesActivity.this,"category", categories.get(1));
                 break;
             case 2:
-                SharedHelper.putKey(CategoriesActivity.this,"category_id", "2");
+                SharedHelper.putKey(CategoriesActivity.this,"category", categories.get(2));
                 break;
             case 3:
-                SharedHelper.putKey(CategoriesActivity.this,"category_id", "3");
+                SharedHelper.putKey(CategoriesActivity.this,"category", categories.get(3));
                 break;
             case 4:
-                SharedHelper.putKey(CategoriesActivity.this,"category_id", "4");
+                SharedHelper.putKey(CategoriesActivity.this,"category", categories.get(4));
                 break;
             case 5:
-                SharedHelper.putKey(CategoriesActivity.this,"category_id", "5");
+                SharedHelper.putKey(CategoriesActivity.this,"category", categories.get(5));
                 break;
             case 6:
-                SharedHelper.putKey(CategoriesActivity.this,"category_id", "6");
+                SharedHelper.putKey(CategoriesActivity.this,"category", categories.get(6));
                 break;
             case 7:
-                SharedHelper.putKey(CategoriesActivity.this,"category_id", "7");
+                SharedHelper.putKey(CategoriesActivity.this,"category", categories.get(7));
                 break;
             case 8:
-                SharedHelper.putKey(CategoriesActivity.this,"category_id", "8");
-                break;
-            case 9:
-                SharedHelper.putKey(CategoriesActivity.this,"category_id", "9");
+                SharedHelper.putKey(CategoriesActivity.this,"category", categories.get(8));
                 break;
         }
     }
@@ -139,28 +135,20 @@ View.OnClickListener, CategoriesListener {
     }
 
     @Override
-    public void onVolleyErrorResponse(VolleyError error) {
-        if (error instanceof NetworkError){
-            Toasty.error(this, "Check your connection and try again", Toasty.LENGTH_LONG).show();
-        }
-        else Toasty.error(this, error.toString(), Toasty.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void onJSONObjectException(JSONException e) {
-        e.printStackTrace();
-        Log.e("JSONException", e.toString());
-    }
-
-    @Override
-    public void onCategoriesReceived(List<ModelCategory> categoryList) {
+    public void onCategoriesReceived(List<Category> categoryList) {
         for (int i= 0; i < categoryList.size(); i++){
-            String id = categoryList.get(i).getId();
             String name = categoryList.get(i).getName();
             RadioButton rb = new RadioButton(CategoriesActivity.this);
             rb.setText(name);
-            rb.setId(Integer.parseInt(id));
+            rb.setId(i);
             categoryRG.addView(rb);
+            categories.add(name);
         }
+    }
+
+    @Override
+    public void onDatabaseCancelled(DatabaseError error) {
+        Toasty.error(this,""+error.getMessage(), Toasty.LENGTH_LONG).show();
+
     }
 }

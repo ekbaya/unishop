@@ -21,30 +21,22 @@ import androidx.appcompat.widget.SearchView;
 import androidx.core.view.MenuItemCompat;
 import androidx.fragment.app.Fragment;
 
-import com.android.volley.NetworkError;
-import com.android.volley.VolleyError;
 import com.example.unishop.activities.LoginActivity;
 import com.example.unishop.R;
-import com.example.unishop.activities.ProductsActivity;
 import com.example.unishop.adapters.ProductsAdapter;
 import com.example.unishop.api.ProductsAPI;
-import com.example.unishop.models.ModelProduct;
+import com.example.unishop.models.Product;
 import com.example.unishop.services.ProductsListener;
 import com.example.unishop.utilities.Loader;
-import com.example.unishop.utilities.NetworkConnection;
 import com.example.unishop.utilities.SharedHelper;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.google.firebase.database.DatabaseError;
 
 import java.util.List;
-import java.util.Objects;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import es.dmoral.toasty.Toasty;
 
-public class HomeFragment extends Fragment implements ProductsListener {
+public class HomeFragment extends Fragment implements ProductsListener.LoadItemsListener {
     @BindView(R.id.gridView_layout) GridView productsGridView;
     private ProductsAPI productsAPI;
     private ProductsAdapter productsAdapter;
@@ -56,7 +48,7 @@ public class HomeFragment extends Fragment implements ProductsListener {
         ButterKnife.bind(this,view);
 
         productsAPI = new ProductsAPI(getActivity());
-        productsAPI.setProductsListener(this);
+        productsAPI.setLoadItemsListener(this);
         loader = new Loader(getActivity());
         loadProducts();
         return view;
@@ -117,13 +109,8 @@ public class HomeFragment extends Fragment implements ProductsListener {
     }
 
     private void loadProducts() {
-        if (new NetworkConnection().get().isConnected(Objects.requireNonNull(getActivity()))){
-            productsAPI.getAllProducts();
-            loader.showDialogue();
-
-        }else {
-            Toasty.warning(getActivity(), getText(R.string.network_text), Toasty.LENGTH_LONG).show();
-        }
+        productsAPI.getAllProducts();
+        loader.showDialogue();
     }
 
     private void searchProducts(String s) {
@@ -176,29 +163,14 @@ public class HomeFragment extends Fragment implements ProductsListener {
     }
 
     @Override
-    public void onItemAdded(JSONObject object) throws JSONException {
-
-    }
-
-    @Override
-    public void onVolleyErrorResponse(VolleyError error) {
-        loader.hideDialogue();
-        if (error instanceof NetworkError){
-            Toasty.error(Objects.requireNonNull(getActivity()), "Check your connection and try again", Toasty.LENGTH_LONG).show();
-        }
-        else Toasty.error(Objects.requireNonNull(getActivity()), error.toString(), Toasty.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void onJSONObjectException(JSONException e) {
-        loader.hideDialogue();
-        Toasty.error(Objects.requireNonNull(getActivity()), e.toString(), Toasty.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void onProductsReceived(List<ModelProduct> productList) {
+    public void onProductsReceived(List<Product> productList) {
         loader.hideDialogue();
         productsAdapter = new ProductsAdapter(getActivity(), productList);
         productsGridView.setAdapter(productsAdapter);
+    }
+
+    @Override
+    public void onDatabaseCancelled(DatabaseError error) {
+        loader.hideDialogue();
     }
 }

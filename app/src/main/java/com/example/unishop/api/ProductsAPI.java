@@ -1,276 +1,221 @@
 package com.example.unishop.api;
 
 import android.content.Context;
-import android.util.Log;
+import android.net.Uri;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-import com.example.unishop.models.ModelProduct;
+import androidx.annotation.NonNull;
+
+import com.example.unishop.models.Product;
 import com.example.unishop.services.ProductsListener;
-import com.example.unishop.utilities.Server;
 import com.example.unishop.utilities.SharedHelper;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class ProductsAPI {
-   private Context context;
-   private ProductsListener productsListener;
-   private ProductsListener.UpdateListener updateListener;
-   List<ModelProduct> productList;
+    private Context context;
+    private StorageReference storageReference;
+    private DatabaseReference databaseReference;
+    private ProductsListener.AddItemListener addItemListener;
+    private ProductsListener.LoadItemsListener loadItemsListener;
+    private ProductsListener.UpdateProductListener updateProductListener;
+    List<Product> productList;
 
     public ProductsAPI(Context context) {
         this.context = context;
+        databaseReference = FirebaseDatabase.getInstance().getReference("Products");
+        databaseReference.keepSynced(true);
         productList = new ArrayList<>();
     }
 
-    public void addItem(){
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, Server.get().ADD_ITEM_URL, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                try {
-                    JSONObject jsonObject = new JSONObject(response);
-                    productsListener.onItemAdded(jsonObject);
-                } catch (JSONException e) {
-                    productsListener.onJSONObjectException(e);
-                }
+    public void addItem(byte[] data){
+        //for product image name, post-id, post-publish-time
+        final String timeStamp = String.valueOf(System.currentTimeMillis());
+        String filePathAndName = "Products/" + "product_" + timeStamp;
 
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                productsListener.onVolleyErrorResponse(error);
-            }
-        }){
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<>();
-                params.put("name", SharedHelper.getKey(context, "p_name"));
-                params.put("category_id", SharedHelper.getKey(context, "category_id"));
-                params.put("price", SharedHelper.getKey(context, "price"));
-                params.put("quantity", SharedHelper.getKey(context, "quantity"));
-                params.put("description", SharedHelper.getKey(context, "description"));
-                params.put("image_url", SharedHelper.getKey(context, "image_url"));
-                return params;
-            }
-        };
+        storageReference = FirebaseStorage.getInstance().getReference().child(filePathAndName);
+        storageReference.putBytes(data)
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        //image is uploaded to firebase storage now get its url
+                        Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
+                        while (!uriTask.isSuccessful());
 
-        RequestQueue requestQueue = Volley.newRequestQueue(context);
-        requestQueue.add(stringRequest);
+                        String downloadUri = Objects.requireNonNull(uriTask.getResult()).toString();
+                        if (uriTask.isSuccessful()) {
+                            //url is received upload post to Firebase database
+                            Map<Object, String> params = new HashMap<>();
+                            params.put("id",timeStamp);
+                            params.put("name", SharedHelper.getKey(context, "p_name"));
+                            params.put("category", SharedHelper.getKey(context, "category"));
+                            params.put("price", SharedHelper.getKey(context, "price"));
+                            params.put("quantity", SharedHelper.getKey(context, "quantity"));
+                            params.put("description", SharedHelper.getKey(context, "description"));
+                            params.put("image", downloadUri);
 
+                            databaseReference.child(timeStamp).setValue(params)
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            addItemListener.onItemAdded();
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            addItemListener.onFailureAddingItem(e);
+                                        }
+                                    });
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        addItemListener.onFailureUploadingImage(e);
+                    }
+                });
     }
 
-    public void updatePrice(String id, String price){
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, Server.get().UPDATE_PRICE_URL, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                try {
-                    JSONObject jsonObject = new JSONObject(response);
-                    updateListener.onPriceUpdated(jsonObject);
-                } catch (JSONException e) {
-                    updateListener.onJSONObjectException(e);
-                }
+    public void updateProduct(String id, String image, byte[] data, Map<String, Object> params){
+        //product is with image, delete the previous product image first
+        storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(image);
+        storageReference.delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        //store the new image
+                        String timeStamp = String.valueOf(System.currentTimeMillis());
+                        String filePathAndName = "Posts/"+ "post_"+timeStamp;
 
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                updateListener.onVolleyErrorResponse(error);
-            }
-        }){
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<>();
-                params.put("id",id);
-                params.put("price", price);
-                return params;
-            }
-        };
+                        storageReference = FirebaseStorage.getInstance().getReference().child(filePathAndName);
+                        storageReference.putBytes(data)
+                                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                    @Override
+                                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                        //image updated get its url
+                                        Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
+                                        while (!uriTask.isSuccessful());
 
-        RequestQueue requestQueue = Volley.newRequestQueue(context);
-        requestQueue.add(stringRequest);
+                                        String downloadUri = uriTask.getResult().toString();
+                                        if (uriTask.isSuccessful()){
+                                            params.put("image", downloadUri);
+                                            databaseReference.child(id).updateChildren(params)
+                                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                        @Override
+                                                        public void onSuccess(Void aVoid) {
+                                                            updateProductListener.onProductUpdated();
+                                                        }
+                                                    })
+                                                    .addOnFailureListener(new OnFailureListener() {
+                                                        @Override
+                                                        public void onFailure(@NonNull Exception e) {
+                                                            updateProductListener.onFailureUpdatingProduct(e);
+                                                        }
+                                                    });
+                                        }
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        updateProductListener.onFailureUploadingNewImage(e);
+                                    }
+                                });
 
-    }
-
-    public void updateQuantity(String id, String quantity){
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, Server.get().UPDATE_QUANTITY_URL, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                try {
-                    JSONObject jsonObject = new JSONObject(response);
-                    updateListener.onQuantityUpdated(jsonObject);
-                } catch (JSONException e) {
-                    updateListener.onJSONObjectException(e);
-                }
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                updateListener.onVolleyErrorResponse(error);
-            }
-        }){
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<>();
-                params.put("id",id);
-                params.put("price", quantity);
-                return params;
-            }
-        };
-
-        RequestQueue requestQueue = Volley.newRequestQueue(context);
-        requestQueue.add(stringRequest);
-
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        updateProductListener.onFailureDeletingOldImage(e);
+                    }
+                });
     }
 
     public void  getAllProducts(){
-        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, Server.get().PRODUCTS_URL,
-                null,
-                new Response.Listener<JSONArray>() {
-                    @Override
-                    public void onResponse(JSONArray response) {
-                        Log.e("RESPONSE", response.toString());
-                        int count = 0;
-                        while (count<response.length()){
-                            try {
-                                JSONObject jsonObject = response.getJSONObject(count);
-                                ModelProduct modelProduct = new ModelProduct(
-                                        jsonObject.getString("id"),
-                                        jsonObject.getString("name"),
-                                        jsonObject.getString("category"),
-                                        jsonObject.getString("price"),
-                                        jsonObject.getString("quantity"),
-                                        jsonObject.getString("description"),
-                                        jsonObject.getString("image_url")
-                                );
-                                productList.add(modelProduct);
-                                count++;
-
-                            } catch (JSONException e) {
-                                productsListener.onJSONObjectException(e);
-                            }
-                        }
-
-                        productsListener.onProductsReceived(productList);
-
-                    }
-                }, new Response.ErrorListener() {
+        databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onErrorResponse(VolleyError error) {
-                productsListener.onVolleyErrorResponse(error);
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                productList.clear();
+                for (DataSnapshot ds: dataSnapshot.getChildren()){
+                    Product product = ds.getValue(Product.class);
+                    productList.add(product);
+                }
+                loadItemsListener.onProductsReceived(productList);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                loadItemsListener.onDatabaseCancelled(error);
+
+            }
+        });
+    }
+
+    public void searchProducts(String keyword){
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                productList.clear();
+                for (DataSnapshot ds: dataSnapshot.getChildren()){
+                    Product product = ds.getValue(Product.class);
+
+                    if (product.getName().toLowerCase().contains(keyword.toLowerCase()) ||
+                            product.getCategory().toLowerCase().contains(keyword.toLowerCase()))
+                    {
+                        productList.add(product);
+                    }
+                    loadItemsListener.onProductsReceived(productList);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                loadItemsListener.onDatabaseCancelled(error);
+
             }
         });
 
-        RequestQueue requestQueue = Volley.newRequestQueue(context);
-        requestQueue.add(jsonArrayRequest);
     }
 
-    public void searchProducts(String query){
-        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.GET, Server.get().SEARCH_PRODUCTS_URL,
-                null,
-                new Response.Listener<JSONArray>() {
-                    @Override
-                    public void onResponse(JSONArray response) {
-                        Log.e("RESPONSE", response.toString());
-                        int count = 0;
-                        while (count<response.length()){
-                            try {
-                                JSONObject jsonObject = response.getJSONObject(count);
-                                ModelProduct modelProduct = new ModelProduct(
-                                        jsonObject.getString("id"),
-                                        jsonObject.getString("name"),
-                                        jsonObject.getString("category"),
-                                        jsonObject.getString("price"),
-                                        jsonObject.getString("quantity"),
-                                        jsonObject.getString("description"),
-                                        jsonObject.getString("image_url")
-                                );
-                                productList.add(modelProduct);
-                                count++;
-
-                            } catch (JSONException e) {
-                                productsListener.onJSONObjectException(e);
-                            }
-                        }
-
-                        productsListener.onProductsReceived(productList);
-
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                productsListener.onVolleyErrorResponse(error);
-            }
-        }){
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<>();
-                params.put("keyword", query);
-                return params;
-            }
-        };
-
-        RequestQueue requestQueue = Volley.newRequestQueue(context);
-        requestQueue.add(jsonArrayRequest);
-
+    public ProductsListener.AddItemListener getAddItemListener() {
+        return addItemListener;
     }
 
-    public void deleteProduct(String id){
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, new Server().DELETE_PRODUCT_URL, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                try {
-                    JSONObject jsonObject = new JSONObject(response);
-                    updateListener.onProductDeleted(jsonObject);
-                } catch (JSONException e) {
-                    updateListener.onJSONObjectException(e);
-                }
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                updateListener.onVolleyErrorResponse(error);
-            }
-        }){
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String, String> params = new HashMap<>();
-                params.put("id",id);
-                return params;
-            }
-        };
-
-        RequestQueue requestQueue = Volley.newRequestQueue(context);
-        requestQueue.add(stringRequest);
+    public void setAddItemListener(ProductsListener.AddItemListener addItemListener) {
+        this.addItemListener = addItemListener;
     }
 
-    public ProductsListener getProductsListener() {
-        return productsListener;
+    public ProductsListener.LoadItemsListener getLoadItemsListener() {
+        return loadItemsListener;
     }
 
-    public void setProductsListener(ProductsListener productsListener) {
-        this.productsListener = productsListener;
+    public void setLoadItemsListener(ProductsListener.LoadItemsListener loadItemsListener) {
+        this.loadItemsListener = loadItemsListener;
     }
 
-    public ProductsListener.UpdateListener getUpdateListener() {
-        return updateListener;
+    public ProductsListener.UpdateProductListener getUpdateProductListener() {
+        return updateProductListener;
     }
 
-    public void setUpdateListener(ProductsListener.UpdateListener updateListener) {
-        this.updateListener = updateListener;
+    public void setUpdateProductListener(ProductsListener.UpdateProductListener updateProductListener) {
+        this.updateProductListener = updateProductListener;
     }
 }

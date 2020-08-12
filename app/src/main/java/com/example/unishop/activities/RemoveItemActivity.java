@@ -24,7 +24,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import es.dmoral.toasty.Toasty;
 
-public class RemoveItemActivity extends AppCompatActivity implements ProductsListener.UpdateListener , View.OnClickListener {
+public class RemoveItemActivity extends AppCompatActivity implements View.OnClickListener {
     @BindView(R.id.btnRemove) Button btnRemove;
     @BindView(R.id.edtItemID) EditText edtItemID;
 
@@ -43,48 +43,6 @@ public class RemoveItemActivity extends AppCompatActivity implements ProductsLis
 
         loader = new Loader(this);
         productsAPI = new ProductsAPI(this);
-        productsAPI.setUpdateListener(this);
-    }
-
-    @Override
-    public void onPriceUpdated(JSONObject object) throws JSONException {
-
-    }
-
-    @Override
-    public void onQuantityUpdated(JSONObject object) throws JSONException {
-
-    }
-
-    @Override
-    public void onProductDeleted(JSONObject object) throws JSONException {
-        loader.hideDialogue();
-        boolean success = object.getBoolean("success");
-        String message = object.getString("message");
-
-        if (success){
-            Toasty.success(this, message, Toasty.LENGTH_LONG).show();
-            edtItemID.setText("");
-        }
-        else {
-            Toasty.error(this, message + " , check the id and try again", Toasty.LENGTH_LONG).show();
-        }
-
-    }
-
-    @Override
-    public void onVolleyErrorResponse(VolleyError error) {
-        loader.hideDialogue();
-        if (error instanceof NetworkError){
-            Toasty.error(this, "Check your connection and try again", Toasty.LENGTH_LONG).show();
-        }
-        else Toasty.error(this, error.toString(), Toasty.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void onJSONObjectException(JSONException e) {
-        loader.hideDialogue();
-        Toasty.error(this, e.toString(), Toasty.LENGTH_LONG).show();
     }
 
     @Override
@@ -92,7 +50,7 @@ public class RemoveItemActivity extends AppCompatActivity implements ProductsLis
         if (v.equals(btnRemove)){
             if (validate()){
                 String id = edtItemID.getText().toString();
-                productsAPI.deleteProduct(id);
+                //productsAPI.deleteProduct(id);
                 loader.showDialogue();
             }
         }
