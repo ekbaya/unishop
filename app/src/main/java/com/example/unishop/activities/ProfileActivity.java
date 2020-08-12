@@ -2,26 +2,22 @@ package com.example.unishop.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.android.volley.NetworkError;
-import com.android.volley.VolleyError;
 import com.example.unishop.R;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.example.unishop.api.AccountAPI;
+import com.example.unishop.models.User;
+import com.example.unishop.services.AccountListener;
+import com.google.firebase.database.DatabaseError;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import es.dmoral.toasty.Toasty;
 
-public class ProfileActivity extends AppCompatActivity implements ConsultantListener{
+public class ProfileActivity extends AppCompatActivity implements AccountListener.AccountInstantListener {
     @BindView(R.id.nameTv) TextView nameTv;
     @BindView(R.id.phoneTv) TextView phoneTv;
     @BindView(R.id.referred_byTv) TextView referred_byTv;
@@ -31,7 +27,7 @@ public class ProfileActivity extends AppCompatActivity implements ConsultantList
     @BindView(R.id.progressBar) ProgressBar progressBar;
 
     private Intent intent;
-    private ConsultantsAPI consultantsAPI;
+    private AccountAPI accountAPI;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,9 +38,8 @@ public class ProfileActivity extends AppCompatActivity implements ConsultantList
         ButterKnife.bind(this);
 
         intent = getIntent();
-
-        consultantsAPI = new ConsultantsAPI(this);
-        consultantsAPI.setConsultantListener(this);
+        accountAPI = new AccountAPI(this);
+        accountAPI.setAccountInstantListener(this);
         //set data to views
         setDataToViews();
     }
@@ -58,8 +53,7 @@ public class ProfileActivity extends AppCompatActivity implements ConsultantList
         created_dateTv.setText(intent.getStringExtra("date_created"));
 
         String user_id = intent.getStringExtra("created_by");
-        consultantsAPI.getUserProfile(user_id);
-
+        //accountAPI.getUserAccount(user_id);
     }
 
     @Override
@@ -76,41 +70,15 @@ public class ProfileActivity extends AppCompatActivity implements ConsultantList
     }
 
     @Override
-    public void onConsultantReceived(JSONObject object) throws JSONException {
-        boolean success = object.getBoolean("success");
-        String message = object.getString("message");
-        JSONArray data = object.getJSONArray("data");
-
-        if (success){
-            JSONObject jsonObject = data.getJSONObject(0);
-            String firstname = jsonObject.getString("firstname");
-            String lastname = jsonObject.getString("lastname");
-
-            onUserReceived(firstname, lastname);
-        }
-
-    }
-
-    @Override
-    public void onVolleyErrorResponse(VolleyError error) {
-        if (error instanceof NetworkError){
-            Toasty.error(this, "Check your connection and try again", Toasty.LENGTH_LONG).show();
-        }
-        else Toasty.error(this, error.toString(), Toasty.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void onJSONObjectException(JSONException e) {
-        e.printStackTrace();
-        Log.e("JSONException", e.toString());
+    public void onAccountReceived(User user) {
+        referred_byTv.setText(user.getFirstname()+" "+user.getLastname());
         progressBar.setVisibility(View.GONE);
         referred_byTv.setVisibility(View.VISIBLE);
+
     }
 
     @Override
-    public void onUserReceived(String firstname, String lastname) {
-        referred_byTv.setText(firstname+" "+lastname);
-        progressBar.setVisibility(View.GONE);
-        referred_byTv.setVisibility(View.VISIBLE);
+    public void onRequestCancelled(DatabaseError error) {
+
     }
 }

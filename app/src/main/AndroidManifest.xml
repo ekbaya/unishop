@@ -14,7 +14,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activities.AddCategoryActivity"></activity>
+        <activity android:name=".activities.UpdateProductActivity"></activity>
+        <activity android:name=".activities.AddCategoryActivity" />
         <activity android:name=".activities.RemoveItemActivity" />
         <activity android:name=".activities.ProductsActivity" />
         <activity android:name=".activities.UpdateItemsActivity" />
@@ -24,9 +25,6 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.CategoriesActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activities.UpdatePhoneActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.ProfileActivity"

@@ -54,6 +54,7 @@ public class AccountAPI {
     private AccountListener.AccountInstantListener accountInstantListener;
     private AccountListener.AccountRecoveryListener accountRecoveryListener;
     private AccountListener.LoadAccountsListener loadAccountsListener;
+    private AccountListener.UpdateAccountListener updateAccountListener;
     private User user;
     private Context context;
     private List<User> userList;
@@ -88,40 +89,32 @@ public class AccountAPI {
     public void registerNewUser(final String first_name, final String last_name, final String u_email,
                                  final String u_phone, final String u_id_number, final String password, final String user_role){
         mAuth.createUserWithEmailAndPassword(u_email, password)
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()){
-                            FirebaseUser user = mAuth.getCurrentUser();
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()){
+                        FirebaseUser user = mAuth.getCurrentUser();
 
-                            //get user email and user id from auth
-                            String email = user.getEmail();
-                            String uid = user.getUid();
-                            // when user is registered store user info in firebase realtime database too
-                            //using HashMap
-                            HashMap<Object, String> hashMap = new HashMap<>();
-                            //put info in hashmap
-                            hashMap.put("uid",uid);
-                            hashMap.put("email",email);
-                            hashMap.put("firstname", first_name);
-                            hashMap.put("lastname", last_name);
-                            hashMap.put("id_number", u_id_number);
-                            hashMap.put("phone", u_phone);
-                            hashMap.put("role", user_role);
-                            hashMap.put("enrolledBy", SharedHelper.getKey(context,"user_id"));
+                        //get user email and user id from auth
+                        String email = user.getEmail();
+                        String uid = user.getUid();
+                        // when user is registered store user info in firebase realtime database too
+                        //using HashMap
+                        HashMap<Object, String> hashMap = new HashMap<>();
+                        //put info in hashmap
+                        hashMap.put("uid",uid);
+                        hashMap.put("email",email);
+                        hashMap.put("firstname", first_name);
+                        hashMap.put("lastname", last_name);
+                        hashMap.put("id_number", u_id_number);
+                        hashMap.put("phone", u_phone);
+                        hashMap.put("role", user_role);
+                        hashMap.put("enrolledBy", SharedHelper.getKey(context,"user_id"));
 
-                            //put data within hashMap in database
-                            reference.child(uid).setValue(hashMap);
-                            registrationListener.onAccountCreated();
-                        }
+                        //put data within hashMap in database
+                        reference.child(uid).setValue(hashMap);
+                        registrationListener.onAccountCreated();
                     }
                 })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                       registrationListener.onFailureResponse(e);
-                    }
-                });
+                .addOnFailureListener(e -> registrationListener.onFailureResponse(e));
 
     }
 
@@ -164,22 +157,14 @@ public class AccountAPI {
 
     public void recoverAccount(String email){
         mAuth.sendPasswordResetEmail(email)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()){
-                          accountRecoveryListener.onEmailSent();
-                        }
-                        else {
-                           accountRecoveryListener.onFailureSendingEmail();
-                        }
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()){
+                      accountRecoveryListener.onEmailSent();
                     }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                accountRecoveryListener.onFailureResponse(e);
-            }
-        });
+                    else {
+                       accountRecoveryListener.onFailureSendingEmail();
+                    }
+                }).addOnFailureListener(e -> accountRecoveryListener.onFailureResponse(e));
     }
 
     public void getAllAccounts(){
@@ -201,6 +186,20 @@ public class AccountAPI {
             }
         });
     }
+
+    public void updateUser(FirebaseUser user, String key , String value){
+        HashMap<String, Object> result = new HashMap<>();
+        result.put(key,value);
+        reference.child(user.getUid()).updateChildren(result)
+                .addOnSuccessListener(aVoid -> updateAccountListener.onAccountUpdated())
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        updateAccountListener.onFailureResponse(e);
+                    }
+                });
+    }
+
     public AccountListener.RegistrationListener getRegistrationListener() {
         return registrationListener;
     }
@@ -239,5 +238,13 @@ public class AccountAPI {
 
     public void setLoadAccountsListener(AccountListener.LoadAccountsListener loadAccountsListener) {
         this.loadAccountsListener = loadAccountsListener;
+    }
+
+    public AccountListener.UpdateAccountListener getUpdateAccountListener() {
+        return updateAccountListener;
+    }
+
+    public void setUpdateAccountListener(AccountListener.UpdateAccountListener updateAccountListener) {
+        this.updateAccountListener = updateAccountListener;
     }
 }

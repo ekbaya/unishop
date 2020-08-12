@@ -16,13 +16,11 @@ public interface ProductsListener {
         void onDatabaseCancelled(DatabaseError error);
     }
 
-    interface UpdatePriceListener{
-        void onPriceUpdated();
-        void onDatabaseCancelled(DatabaseError error);
+    interface UpdateProductListener{
+        void onProductUpdated();
+        void onFailureDeletingOldImage(Exception e);
+        void onFailureUploadingNewImage(Exception e);
+        void onFailureUpdatingProduct(Exception e);
     }
 
-    interface UpdateQuantityListener{
-        void onQuantityUpdated();
-        void onDatabaseCancelled(DatabaseError error);
-    }
 }

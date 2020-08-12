@@ -33,8 +33,7 @@ public class ProductsAPI {
     private DatabaseReference databaseReference;
     private ProductsListener.AddItemListener addItemListener;
     private ProductsListener.LoadItemsListener loadItemsListener;
-    private ProductsListener.UpdatePriceListener updatePriceListener;
-    private ProductsListener.UpdateQuantityListener updateQuantityListener;
+    private ProductsListener.UpdateProductListener updateProductListener;
     List<Product> productList;
 
     public ProductsAPI(Context context) {
@@ -94,44 +93,60 @@ public class ProductsAPI {
                 });
     }
 
-    public void updatePrice(String id, String price){
-        Query query = databaseReference.orderByChild("id").equalTo(id);
-        query.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot ds: dataSnapshot.getChildren()){
-                    String child = ds.getKey();
-                    dataSnapshot.getRef().child(child).child("price").setValue(price);
-                }
-                updatePriceListener.onPriceUpdated();
+    public void updateProduct(String id, String image, byte[] data, Map<String, Object> params){
+        //product is with image, delete the previous product image first
+        storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(image);
+        storageReference.delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        //store the new image
+                        String timeStamp = String.valueOf(System.currentTimeMillis());
+                        String filePathAndName = "Posts/"+ "post_"+timeStamp;
 
-            }
+                        storageReference = FirebaseStorage.getInstance().getReference().child(filePathAndName);
+                        storageReference.putBytes(data)
+                                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                    @Override
+                                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                        //image updated get its url
+                                        Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
+                                        while (!uriTask.isSuccessful());
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                updatePriceListener.onDatabaseCancelled(error);
-            }
-        });
-    }
+                                        String downloadUri = uriTask.getResult().toString();
+                                        if (uriTask.isSuccessful()){
+                                            params.put("image", downloadUri);
+                                            databaseReference.child(id).updateChildren(params)
+                                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                        @Override
+                                                        public void onSuccess(Void aVoid) {
+                                                            updateProductListener.onProductUpdated();
+                                                        }
+                                                    })
+                                                    .addOnFailureListener(new OnFailureListener() {
+                                                        @Override
+                                                        public void onFailure(@NonNull Exception e) {
+                                                            updateProductListener.onFailureUpdatingProduct(e);
+                                                        }
+                                                    });
+                                        }
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        updateProductListener.onFailureUploadingNewImage(e);
+                                    }
+                                });
 
-    public void updateQuantity(String id, String quantity){
-        Query query = databaseReference.orderByChild("id").equalTo(id);
-        query.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot ds: dataSnapshot.getChildren()){
-                    String child = ds.getKey();
-                    dataSnapshot.getRef().child(child).child("quantity").setValue(quantity);
-                }
-                updateQuantityListener.onQuantityUpdated();
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                updateQuantityListener.onDatabaseCancelled(error);
-            }
-        });
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        updateProductListener.onFailureDeletingOldImage(e);
+                    }
+                });
     }
 
     public void  getAllProducts(){
@@ -196,19 +211,11 @@ public class ProductsAPI {
         this.loadItemsListener = loadItemsListener;
     }
 
-    public ProductsListener.UpdatePriceListener getUpdatePriceListener() {
-        return updatePriceListener;
+    public ProductsListener.UpdateProductListener getUpdateProductListener() {
+        return updateProductListener;
     }
 
-    public void setUpdatePriceListener(ProductsListener.UpdatePriceListener updatePriceListener) {
-        this.updatePriceListener = updatePriceListener;
-    }
-
-    public ProductsListener.UpdateQuantityListener getUpdateQuantityListener() {
-        return updateQuantityListener;
-    }
-
-    public void setUpdateQuantityListener(ProductsListener.UpdateQuantityListener updateQuantityListener) {
-        this.updateQuantityListener = updateQuantityListener;
+    public void setUpdateProductListener(ProductsListener.UpdateProductListener updateProductListener) {
+        this.updateProductListener = updateProductListener;
     }
 }

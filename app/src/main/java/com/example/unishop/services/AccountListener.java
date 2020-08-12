@@ -33,4 +33,9 @@ public interface AccountListener {
         void onAccountsReceived(List<User> userList);
         void onDatabaseCancelled(DatabaseError error);
     }
+
+    interface UpdateAccountListener{
+        void onAccountUpdated();
+        void onFailureResponse(Exception e);
+    }
 }

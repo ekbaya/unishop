@@ -25,7 +25,6 @@
     <string name="permissions_text">All the permissions are required in order to access the services, please allow</string>
 
 
-
     <string name="name_and_description">Refurbished Elitebook Folio 9480m - 14" - Intel Core I7 - 8GB RAM - 500GB HDD - Silver</string>
     <string name="ksh_30_000">KSH 30,000</string>
     <string name="category_computing">Category: Computing</string>
@@ -42,4 +41,9 @@
     <string name="description">Description</string>
     <string name="name">Name</string>
     <string name="send">Send</string>
+    <string name="product_name">Product name:</string>
+    <string name="product_quantity">Product quantity:</string>
+    <string name="update">update</string>
+    <string name="product_price">Product price:</string>
+    <string name="price_description">Price description:</string>
 </resources>
