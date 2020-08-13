@@ -23,14 +23,22 @@
             android:layout_gravity="center_horizontal"/>
         <TextView
             android:layout_marginTop="20dp"
-            android:id="@+id/loan_limitTv"
+            android:id="@+id/user_countTxt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="10"
             android:textSize="22sp"
             android:textStyle="bold"
             android:textColor="@color/colorWhite"
-            android:layout_gravity="center_horizontal"/>
+            android:layout_gravity="center_horizontal"
+            android:visibility="gone"/>
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_marginTop="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:background="@color/colorWhite"/>
     </LinearLayout>
     <androidx.core.widget.NestedScrollView
         android:layout_marginTop="200dp"

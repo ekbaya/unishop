@@ -1,9 +1,5 @@
 package com.example.unishop.activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.SearchView;
-import androidx.core.view.MenuItemCompat;
-
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,15 +7,14 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.android.volley.NetworkError;
-import com.android.volley.VolleyError;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
+import androidx.core.view.MenuItemCompat;
+
 import com.example.unishop.R;
 import com.example.unishop.adapters.ProductsAdapter;
 import com.example.unishop.api.ProductsAPI;
@@ -29,14 +24,10 @@ import com.example.unishop.utilities.Loader;
 import com.example.unishop.utilities.SharedHelper;
 import com.google.firebase.database.DatabaseError;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import es.dmoral.toasty.Toasty;
 
 public class UpdateItemsActivity extends AppCompatActivity implements ProductsListener.LoadItemsListener{
     @BindView(R.id.gridView_layout) GridView productsGridView;

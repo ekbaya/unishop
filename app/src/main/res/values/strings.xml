@@ -46,4 +46,6 @@
     <string name="update">update</string>
     <string name="product_price">Product price:</string>
     <string name="price_description">Price description:</string>
+    <string name="select_product_to_remove">Select product to remove</string>
+    <string name="detete_product_txt">Are you sure you want to delete this product?</string>
 </resources>

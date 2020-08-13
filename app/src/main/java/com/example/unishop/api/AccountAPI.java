@@ -55,6 +55,7 @@ public class AccountAPI {
     private AccountListener.AccountRecoveryListener accountRecoveryListener;
     private AccountListener.LoadAccountsListener loadAccountsListener;
     private AccountListener.UpdateAccountListener updateAccountListener;
+    private AccountListener.AccountsCountListener accountsCountListener;
     private User user;
     private Context context;
     private List<User> userList;
@@ -82,6 +83,27 @@ public class AccountAPI {
             @Override
             public void onFailure(@NonNull Exception e) {
                loginListener.onFailureResponse(e);
+            }
+        });
+    }
+
+    public void getUsersCounts(){
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                int count = 0;
+                for (DataSnapshot ds: snapshot.getChildren()){
+                    User user = ds.getValue(User.class);
+                    if (user.getRole().equalsIgnoreCase("consultant")){
+                        count++;
+                    }
+                }
+               accountsCountListener.onAccountCountReceived(count);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+               accountsCountListener.onDatabaseCancelled(error);
             }
         });
     }
@@ -246,5 +268,13 @@ public class AccountAPI {
 
     public void setUpdateAccountListener(AccountListener.UpdateAccountListener updateAccountListener) {
         this.updateAccountListener = updateAccountListener;
+    }
+
+    public AccountListener.AccountsCountListener getAccountsCountListener() {
+        return accountsCountListener;
+    }
+
+    public void setAccountsCountListener(AccountListener.AccountsCountListener accountsCountListener) {
+        this.accountsCountListener = accountsCountListener;
     }
 }
