@@ -52,4 +52,5 @@
     <string name="added_to_cart">Item has been successfully added to cart !</string>
     <string name="add">+</string>
     <string name="substract">-</string>
+    <string name="my_cart">My Cart</string>
 </resources>
