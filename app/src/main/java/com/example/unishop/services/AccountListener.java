@@ -38,4 +38,9 @@ public interface AccountListener {
         void onAccountUpdated();
         void onFailureResponse(Exception e);
     }
+
+    interface AccountsCountListener{
+        void onAccountCountReceived(int count);
+        void onDatabaseCancelled(DatabaseError error);
+    }
 }

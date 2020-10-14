@@ -11,6 +11,8 @@ import com.example.unishop.utilities.SharedHelper;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -34,6 +36,7 @@ public class ProductsAPI {
     private ProductsListener.AddItemListener addItemListener;
     private ProductsListener.LoadItemsListener loadItemsListener;
     private ProductsListener.UpdateProductListener updateProductListener;
+    private ProductsListener.removeProductLister removeProductLister;
     List<Product> productList;
 
     public ProductsAPI(Context context) {
@@ -149,6 +152,37 @@ public class ProductsAPI {
                 });
     }
 
+    public void deleteProduct(String id, String image){
+        //delete product Image
+        storageReference = FirebaseStorage.getInstance().getReferenceFromUrl(image);
+        storageReference.delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                       //delete product from database
+                        databaseReference.child(id).removeValue()
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        removeProductLister.onProductRemoved();
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        removeProductLister.onFailureRemovingProduct(e);
+                                    }
+                                });
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        removeProductLister.onFailureDeletingProductImage(e);
+                    }
+                });
+    }
+
     public void  getAllProducts(){
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -195,6 +229,7 @@ public class ProductsAPI {
 
     }
 
+
     public ProductsListener.AddItemListener getAddItemListener() {
         return addItemListener;
     }
@@ -217,5 +252,13 @@ public class ProductsAPI {
 
     public void setUpdateProductListener(ProductsListener.UpdateProductListener updateProductListener) {
         this.updateProductListener = updateProductListener;
+    }
+
+    public ProductsListener.removeProductLister getRemoveProductLister() {
+        return removeProductLister;
+    }
+
+    public void setRemoveProductLister(ProductsListener.removeProductLister removeProductLister) {
+        this.removeProductLister = removeProductLister;
     }
 }

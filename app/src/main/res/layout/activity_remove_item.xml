@@ -1,55 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.RemoveItemActivity">
+    tools:context=".activities.RemoveItemActivity"
+    android:background="@color/mintcream"
+    android:orientation="vertical">
 
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="30dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginTop="30dp">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/enter_the_item_id"
-                android:id="@+id/edtItemID"/>
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <TextView
-            android:layout_marginTop="20sp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/disclaimer"
-            android:textColor="@color/colorBlack"
-            android:textSize="18sp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"
-            android:layout_gravity="center_horizontal"
-            android:gravity="center_horizontal"/>
-
-        <Button
-            android:id="@+id/btnRemove"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/remove"
-            android:layout_marginTop="30dp"
-            android:background="@color/buttonColor2"
-            android:textColor="@color/colorWhite"
-            android:layout_marginLeft="30dp"
-            android:layout_marginRight="30dp"/>
-    </LinearLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/select_product_to_remove"
+        android:textColor="@color/colorDark"
+        android:textSize="30sp"
+        android:layout_gravity="center_horizontal"/>
+    <GridView
+        android:layout_marginTop="10dp"
+        android:id="@+id/gridView_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:numColumns="2"
+        android:horizontalSpacing="5dp"
+        android:verticalSpacing="5dp"
+        android:layout_marginBottom="10dp"/>
+</LinearLayout>

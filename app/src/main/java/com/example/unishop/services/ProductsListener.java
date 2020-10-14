@@ -23,4 +23,10 @@ public interface ProductsListener {
         void onFailureUpdatingProduct(Exception e);
     }
 
+    interface  removeProductLister{
+        void onProductRemoved();
+        void onFailureDeletingProductImage(Exception e);
+        void onFailureRemovingProduct(Exception e);
+    }
+
 }
