@@ -11,6 +11,10 @@
     <item android:id="@+id/action_logout"
         android:title="@string/logout" />
 
+    <item android:id="@+id/action_cart"
+        android:title="@string/my_cart"
+        app:showAsAction="ifRoom" />
+
     <item android:id="@+id/action_add_product"
         android:title="@string/add_product"
         app:showAsAction="always"

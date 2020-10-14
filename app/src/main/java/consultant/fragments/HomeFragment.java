@@ -35,6 +35,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import consultant.activities.CheckoutActivity;
 
 public class HomeFragment extends Fragment implements ProductsListener.LoadItemsListener {
     @BindView(R.id.gridView_layout) GridView productsGridView;
@@ -122,6 +123,9 @@ public class HomeFragment extends Fragment implements ProductsListener.LoadItems
         int id = item.getItemId();
         if (id == R.id.action_logout){
             showLogoutDialogue();
+        }
+        if (id == R.id.action_cart){
+            startActivity(new Intent(getActivity(), CheckoutActivity.class));
         }
         return super.onOptionsItemSelected(item);
     }

@@ -11,10 +11,15 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class OrderAPI {
@@ -22,11 +27,14 @@ public class OrderAPI {
     private FirebaseAuth auth;
     private DatabaseReference databaseReference;
     private OrderListener.AddToCartListener addToCartListener;
+    private OrderListener.LoadOrdersListener loadOrdersListener;
+    private List<Product> orderList;
 
     public OrderAPI(Context context) {
         this.context = context;
         auth = FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference("Cart");
+        orderList = new ArrayList<>();
     }
 
     public  void addProductToCart(Product product){
@@ -62,11 +70,44 @@ public class OrderAPI {
                 });
     }
 
+    public void getOrders(){
+        FirebaseUser user = auth.getCurrentUser();
+        assert user != null;
+        String uid = user.getUid();
+        databaseReference
+                .child(uid)
+                .addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                orderList.clear();
+                for (DataSnapshot ds: dataSnapshot.getChildren()){
+                    Product order = ds.getValue(Product.class);
+                    orderList.add(order);
+                }
+                loadOrdersListener.onOrdersReceived(orderList);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                loadOrdersListener.onDatabaseCancelled(error);
+            }
+        });
+
+    }
+
     public OrderListener.AddToCartListener getAddToCartListener() {
         return addToCartListener;
     }
 
     public void setAddToCartListener(OrderListener.AddToCartListener addToCartListener) {
         this.addToCartListener = addToCartListener;
+    }
+
+    public OrderListener.LoadOrdersListener getLoadOrdersListener() {
+        return loadOrdersListener;
+    }
+
+    public void setLoadOrdersListener(OrderListener.LoadOrdersListener loadOrdersListener) {
+        this.loadOrdersListener = loadOrdersListener;
     }
 }
