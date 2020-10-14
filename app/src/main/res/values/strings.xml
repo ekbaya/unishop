@@ -48,4 +48,6 @@
     <string name="price_description">Price description:</string>
     <string name="select_product_to_remove">Select product to remove</string>
     <string name="detete_product_txt">Are you sure you want to delete this product?</string>
+    <string name="add_cart">Add this item to Cart</string>
+    <string name="added_to_cart">Item has been successfully added to cart !</string>
 </resources>

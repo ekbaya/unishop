@@ -11,6 +11,8 @@ import com.example.unishop.utilities.SharedHelper;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -226,6 +228,7 @@ public class ProductsAPI {
         });
 
     }
+
 
     public ProductsListener.AddItemListener getAddItemListener() {
         return addItemListener;

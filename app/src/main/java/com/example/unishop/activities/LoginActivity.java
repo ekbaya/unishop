@@ -3,24 +3,18 @@ package com.example.unishop.activities;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.InputType;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.android.volley.NetworkError;
-import com.android.volley.VolleyError;
 import com.example.unishop.R;
 import com.example.unishop.api.AccountAPI;
 import com.example.unishop.models.User;
@@ -29,20 +23,11 @@ import com.example.unishop.services.AccountListener;
 import com.example.unishop.utilities.Loader;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import consultant.DasboardActivity;
+import consultant.activities.DasboardActivity;
 import es.dmoral.toasty.Toasty;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener,
