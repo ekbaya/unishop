@@ -29,6 +29,7 @@ public class OrderAPI {
     private OrderListener.AddToCartListener addToCartListener;
     private OrderListener.LoadOrdersListener loadOrdersListener;
     private List<Product> orderList;
+    private OrderListener.RemoveItemsListener removeItemsListener;
 
     public OrderAPI(Context context) {
         this.context = context;
@@ -95,6 +96,28 @@ public class OrderAPI {
 
     }
 
+    public void removeItemsInCart(){
+        FirebaseUser user = auth.getCurrentUser();
+        assert user != null;
+        String uid = user.getUid();
+        databaseReference.child(uid)
+                .removeValue()
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()){
+                            removeItemsListener.onItemsRemoved();
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        removeItemsListener.onFailureResponse(e);
+                    }
+                });
+    }
+
     public OrderListener.AddToCartListener getAddToCartListener() {
         return addToCartListener;
     }
@@ -109,5 +132,13 @@ public class OrderAPI {
 
     public void setLoadOrdersListener(OrderListener.LoadOrdersListener loadOrdersListener) {
         this.loadOrdersListener = loadOrdersListener;
+    }
+
+    public OrderListener.RemoveItemsListener getRemoveItemsListener() {
+        return removeItemsListener;
+    }
+
+    public void setRemoveItemsListener(OrderListener.RemoveItemsListener removeItemsListener) {
+        this.removeItemsListener = removeItemsListener;
     }
 }

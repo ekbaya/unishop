@@ -15,4 +15,9 @@ public interface OrderListener {
         void onOrdersReceived(List<Product> orderList);
         void onDatabaseCancelled(DatabaseError error);
     }
+
+    interface RemoveItemsListener{
+        void onItemsRemoved();
+        void onFailureResponse(Exception e);
+    }
 }
