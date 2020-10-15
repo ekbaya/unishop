@@ -38,11 +38,13 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.MyHolder>{
         final String name = orders.get(position).getName();
         final String description = orders.get(position).getDescription();
         final String quantity = orders.get(position).getQuantity();
+        final int total = (Integer.parseInt(orders.get(position).getPrice()) * Integer.parseInt("1"));
 
         //set Views
         holder.nameTv.setText(name);
         holder.quantityTv.setText(quantity);
         holder.descriptionTv.setText(description);
+        holder.priceTv.setText("KES "+String.valueOf(total));
 
     }
 
@@ -53,7 +55,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.MyHolder>{
 
     class MyHolder extends RecyclerView.ViewHolder{
         //views
-        TextView nameTv, descriptionTv, quantityTv;
+        TextView nameTv, descriptionTv, quantityTv, priceTv;
         Button subBtn, addBtn;
 
         public MyHolder(@NonNull View itemView) {
@@ -61,6 +63,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.MyHolder>{
             //init views
             nameTv = itemView.findViewById(R.id.nameTv);
             descriptionTv = itemView.findViewById(R.id.descriptionTv);
+            priceTv = itemView.findViewById(R.id.priceTv);
             quantityTv = itemView.findViewById(R.id.quantityTv);
             subBtn = itemView.findViewById(R.id.subBtn);
             addBtn = itemView.findViewById(R.id.addBtn);

@@ -53,4 +53,6 @@
     <string name="add">+</string>
     <string name="substract">-</string>
     <string name="my_cart">My Cart</string>
+    <string name="total">Total:</string>
+    <string name="sell_orders">Sell orderS</string>
 </resources>
