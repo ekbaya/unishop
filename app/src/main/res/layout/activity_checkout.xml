@@ -15,8 +15,49 @@
         app:layout_constraintTop_toTopOf="parent">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical" >
+            <LinearLayout
+                android:id="@+id/balance_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:visibility="gone">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/total"
+                    android:textSize="30sp"
+                    android:textStyle="bold"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"/>
+                <TextView
+                    android:id="@+id/totalTV"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="KES 25000"
+                    android:textSize="30sp"
+                    android:textColor="@color/colorGreen"
+                    android:textStyle="bold"/>
+                <Button
+                    android:id="@+id/sendBtn"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sell_orders"
+                    android:padding="10dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="10dp"
+                    android:layout_marginStart="10dp"
+                    android:textColor="@color/colorWhite"
+                    android:background="@drawable/button_rounded"/>
+            </LinearLayout>
+            <View
+                android:id="@+id/view"
+                android:visibility="gone"
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorDark"/>
             <androidx.recyclerview.widget.RecyclerView
                 android:layout_marginTop="20dp"
                 android:layout_marginLeft="10dp"
