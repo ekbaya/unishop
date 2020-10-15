@@ -90,6 +90,10 @@ public class CheckoutActivity extends AppCompatActivity implements OrderListener
             view.setVisibility(View.VISIBLE);
             cart_recyclerview.setVisibility(View.VISIBLE);
         }
+        else {
+            progressBar.setVisibility(View.GONE);
+            Toasty.warning(this, "No items added to Cart", Toasty.LENGTH_LONG).show();
+        }
 
     }
 
